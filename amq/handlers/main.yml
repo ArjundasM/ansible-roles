@@ -1,0 +1,4 @@
+---
+- name: start amq
+  command: "{{ amq_home_dir }}/activemq start"
+

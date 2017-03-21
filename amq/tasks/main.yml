@@ -1,0 +1,4 @@
+#Including required tasks
+- include: download.yml
+- include: start.yml
+- include: service.yml
