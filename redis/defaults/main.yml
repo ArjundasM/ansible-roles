@@ -17,5 +17,5 @@ loglevel: debug
 logfile: "/var/log/redis_{{ redis_port }}.log"
 dir: "/var/redis/{{ redis_port }}"
 protected_mode: "no"
-
+# if your redis want to communicate with all interfaces.
 bind_address: "#bind 127.0.0.1"	
