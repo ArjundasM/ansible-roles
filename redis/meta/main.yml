@@ -1,0 +1,26 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: arjundasm
+  description: Redis for Linux
+  company: "RZTL"
+  license: "MIT"
+  min_ansible_version: 2.0
+  platforms:
+    - name: EL
+      versions:
+      - 6
+      - 7
+    - name: Fedora
+      versions:
+      - all
+    - name: Debian
+      versions:
+      - all
+    - name: Ubuntu
+      versions:
+      - all
+  galaxy_tags:
+    - database
+
