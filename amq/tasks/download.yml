@@ -1,7 +1,7 @@
 ---
-
 #To download activemq paackage
-- get_url: 
+- name: Downloading amq-{{ amq_version }}
+  get_url: 
     url: "{{ amq_url }}"
     dest: "{{ amq_install_dir }}/apache-activemq-{{ amq_version }}-bin.tar.gz"
     force: no
@@ -11,14 +11,18 @@
   until: result|success
   retries: 5
   delay: 2
-#Extracting the package
-#- name: Extracting tarball
-#  command: tar -xvf {{ amq_install_dir }}/apache-activemq-{{ amq_version }}-bin.tar.gz --directory {{ amq_install_dir }}
 
-- unarchive:
+#Extracting the package
+- name: Extracting downloaded package
+  unarchive:
     src: "{{ amq_install_dir }}/apache-activemq-{{ amq_version }}-bin.tar.gz"
     dest: "{{ amq_install_dir }}"
     remote_src: true
 
-- file: path={{ amq_install_dir }}/apache-activemq-{{ amq_version }} owner={{ amq_user }} group={{ amq_group }} recurse=yes
-
+#File permissions
+- name: Changing file permissions
+  file: 
+    path: "{{ amq_install_dir }}/apache-activemq-{{ amq_version }}"
+    owner: "{{ amq_user }}" 
+    group: "{{ amq_group }}"
+    recurse: yes
