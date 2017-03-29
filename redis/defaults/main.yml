@@ -15,7 +15,7 @@ redis_data_dir: "/var/redis"
 daemonize: "yes"
 pidfile: "/var/run/redis_{{ redis_port }}.pid"
 #Loglevels: degub|verbose|notice|warninig
-loglevel: verbose
+loglevel: debug
 logfile: "/var/log/redis_{{ redis_port }}.log"
 dir: "/var/redis/{{ redis_port }}"
 protected_mode: "no"
