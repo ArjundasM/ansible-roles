@@ -1,0 +1,4 @@
+ANSIBLE HADOOP ROLE FOR AWS INSTANCES
+=====================================
+SUPPORTED PLATFORMS:
+  - UBUNTU
