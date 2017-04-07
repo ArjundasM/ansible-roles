@@ -1,0 +1,24 @@
+---
+#Downloading hadoop package
+- name: Downloading hadoop version hadoop-{{ hadoop_version }}
+  get_url:
+    url: "{{ hadoop_url }}"
+    dest: "{{ hadoop_install_dir }}"
+  register: result
+  until: result|success
+  retries: 5
+  delay: 2
+
+- name: Extracting package
+  unarchive:
+    src: "{{ hadoop_install_dir }}/{{ hadoop_version }}.tar.gz"
+    dest: "{{ hadoop_install_dir }}"
+    remote_src: true
+
+- name: Changing file permissions
+  file:
+    path: "{{ hadoop_install_dir }}/{{ hadoop_version }}"
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_group }}"
+    recurse: yes
+

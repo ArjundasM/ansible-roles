@@ -1,0 +1,8 @@
+---
+- name: accept new ssh fingerprints
+  shell: "ssh-keyscan -H -t ecdsa-sha2-nistp256 {{ item }} >> /home/{{ hadoop_user }}/.ssh/known_hosts"
+  with_items: 
+    - localhost
+    - 0.0.0.0
+#    - "{% for host in groups['test'] %} {{ hostvars[host]['ansible_all_ipv4_addresses'] }} {% endfor %}"
+    - "{{ groups['local'] }}"

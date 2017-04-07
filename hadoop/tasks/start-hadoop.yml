@@ -1,0 +1,7 @@
+---
+- name: Formating namenode
+  command: "/opt/hadoop-2.7.3/bin/hdfs namenode -format -force"
+  when: ansible_fqdn == "{{ hadoop_namenode }}"
+  become: true
+  become_user: "{{ hadoop_user }}"
+  notify: Start hadoop

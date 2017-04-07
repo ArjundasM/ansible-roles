@@ -1,0 +1,11 @@
+---
+- name: Hadoop cluster installation
+  gather_facts: yes
+  hosts: test
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  roles:
+    - java-8
+    - hadoop
+
