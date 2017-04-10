@@ -1,0 +1,4 @@
+---
+- include: download.yml
+- include: environment.yml
+- include: datanode.yml
