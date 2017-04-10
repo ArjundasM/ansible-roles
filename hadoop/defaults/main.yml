@@ -1,6 +1,6 @@
 ---
-#Specify the install mode single | cluster
-hadoop_install_mode: 'single'
+#Specify the install mode single | cluster | datanode
+hadoop_install_mode: 'cluster'
 hadoop_install_dir: /opt
 #Enter the user name and group to configure hadoop
 hadoop_user: ubuntu
@@ -8,7 +8,7 @@ hadoop_group: ubuntu
 #Specify directory location for datadirectory
 hadoop_store_dir: /opt/hadoop_store
 #Mnetion IP address or hostname of namenode
-hadoop_namenode: ip-10-0-1-195.ap-northeast-1.compute.internal
+hadoop_namenode: < namenode fqdn >
 #Mention keyfile name to create ssh key
 hadoop_keyfile: id_rsa
 #Enter ansible server location to store keyfile
