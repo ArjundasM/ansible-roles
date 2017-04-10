@@ -1,13 +1,6 @@
-#Inclusding required tasks
-- include: download.yml
-- include: cluster-config.yml
-#  when: hadoop_install_mode == cluster
-#- include: single-node.yml
-#  when: hadoop_install_mode == single
-- include: environment.yml
-- include: ssh-keygen.yml
-#  when: hadoop_install_mode == cluster
-- include: ssh-keyscan.yml
-#  when: ansible_fqdn == "{{ hadoop_namenode }}"
-- include: start-hadoop.yml
-  when: ansible_fqdn == "{{ hadoop_namenode }}"
+- include: cluster-setup.yml
+  when: hadoop_install_mode == 'cluster'
+- include: single-node-setup.yml
+  when: hadoop_install_mode == 'single' and ansible_fqdn == "{{ hadoop_namenode }}"
+- include: datanode-setup.yml
+  when: hadoop_install_mode == 'datanode' and inventory_hostname in "{{ groups['newdatanode'] }}"
