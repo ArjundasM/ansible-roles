@@ -1,5 +1,10 @@
 ---
 #Downloading hadoop package
+- name: Get namenoe fqdn
+  shell: /bin/hostname -f
+  register: hadoop_namenode
+  when: inventory_hostname in "{{ groups['namenode'] }}"
+
 - name: Downloading hadoop version hadoop-{{ hadoop_version }}
   get_url:
     url: "{{ hadoop_url }}"
