@@ -83,5 +83,5 @@
   when: ansible_fqdn != "{{ hadoop_namenode }}"
 
 #Adding public key of all datanode to authorized_keys file 
-- name: Adding keyfile to all datanodes authorized_keys file
+- name: Adding keyfile to servers authorized_keys file
   shell: "cat /home/{{ hadoop_user }}/.ssh/{{ hadoop_keyfile }}.pub >> /home/{{ hadoop_user }}/.ssh/authorized_keys"
