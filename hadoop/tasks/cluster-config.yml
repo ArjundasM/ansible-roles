@@ -9,10 +9,6 @@
     mode: 0755
     recurse: yes
   when: ansible_fqdn == "{{ hadoop_namenode }}"
-- command: "chown -R {{ hadoop_user }}:{{ hadoop_user }} {{ hadoop_store_dir }}/hdfs/namenode/"
-  become: yes
-  become_method: sudo
-  when: ansible_fqdn == "{{ hadoop_namenode }}"
 
 #Creating datanode directory in all datanode servers
 - name: Creating datanode directory
