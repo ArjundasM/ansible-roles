@@ -1,14 +1,15 @@
 ---
 #Specify the install mode single | cluster | datanode
-hadoop_install_mode: 'cluster'
-hadoop_install_dir: /opt
+hadoop_install_mode: 'datanode'
+hadoop_install_dir: /ebs
 #Enter the user name and group to configure hadoop
-hadoop_user: ubuntu
-hadoop_group: ubuntu
+hadoop_user: hdfs
+hadoop_group: hadoop
 #Specify directory location for datadirectory
-hadoop_store_dir: /opt/hadoop_store
-#Mnetion IP address or hostname of namenode
-hadoop_namenode: < namenode fqdn >
+hadoop_store_dir: /ebs/hadoop_store
+#Metion IP address or hostname of namenode
+hadoop_namenode: "{{ hostvars[groups['namenode'][0]]['ansible_fqdn'] }}"
+#hadoop_namenode: 
 #Mention keyfile name to create ssh key
 hadoop_keyfile: id_rsa
 #Enter ansible server location to store keyfile

@@ -1,7 +1,8 @@
 ---
 - name: Formating namenode
-  command: "/opt/hadoop-2.7.3/bin/hdfs namenode -format -force"
-  when: ansible_fqdn == "{{ hadoop_namenode }}"
-  become: true
+  command: "{{ hadoop_home_dir }}/bin/hdfs namenode -format -force"
+  become: True
   become_user: "{{ hadoop_user }}"
+  when: ansible_fqdn ==  hadoop_namenode
   notify: Start hadoop
+#  ansible_ssh_pipelining: true

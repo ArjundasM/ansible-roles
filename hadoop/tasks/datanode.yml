@@ -7,10 +7,12 @@
     owner: "{{ hadoop_user }}"
     group: "{{ hadoop_group }}"
     mode: 0600
+  when: inventory_hostname in groups['newdatanode']
 
 #Adding public key of all datanode to authorized_keys file 
 - name: Adding keyfile to all datanodes authorized_keys file
   shell: "cat /home/{{ hadoop_user }}/.ssh/{{ hadoop_keyfile }}.pub >> /home/{{ hadoop_user }}/.ssh/authorized_keys"
+  when: inventory_hostname in groups['newdatanode']
 
 #Creating datanode directory in all datanode server
 - name: Creating datanode directory
@@ -21,6 +23,7 @@
     group: "{{ hadoop_group }}"
     mode: 0755
     recurse: yes
+  when: inventory_hostname in groups['newdatanode']
 
 #Creating temporary directory in all server
 - name: Creating temporaray directory
@@ -31,6 +34,7 @@
     group: "{{ hadoop_group }}"
     mode: 0755
     recurse: yes
+  when: inventory_hostname in groups['newdatanode']
 
 #Copying core-site file to all servers
 - name: Copying core-site file
@@ -40,6 +44,7 @@
     owner: "{{ hadoop_user }}"
     group: "{{ hadoop_group }}"
     mode: 0644
+  when: inventory_hostname in groups['newdatanode']
 
 #Copying hdfs-site file for datanodes
 - name: Copying hdfs-site file for datanode
@@ -49,6 +54,7 @@
     owner: "{{ hadoop_user }}"
     group: "{{ hadoop_group }}"
     mode: 0644
+  when: inventory_hostname in groups['newdatanode']
 
 #Copying slaves file to namenode
 - name: Copying slave file
@@ -58,7 +64,7 @@
     owner: "{{ hadoop_user }}"
     group: "{{ hadoop_group }}"
     mode: 0644
-  when: ansible_fqdn == "{{ hadoop_namenode }}"
+  when: ansible_fqdn == hadoop_namenode
 
 #Adding java home to hadoop-env file of all servers
 - name: Adding java_home to hadoop-env file
@@ -72,5 +78,5 @@
     - /usr/lib/jvm/java-7-openjdk-amd64
     - /usr/lib/jvm/jre-1.7.0i
   notify: Start datanode
-
+  when: inventory_hostname in groups['newdatanode']
 

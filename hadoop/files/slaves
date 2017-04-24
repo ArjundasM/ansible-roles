@@ -1,3 +1,5 @@
+localhost
+0.0.0.0
 {% for host in groups['hadoop'] %}
 {% if hostvars[host]['ansible_fqdn'] != hadoop_namenode %}
 {{ hostvars[host]['ansible_fqdn'] }}

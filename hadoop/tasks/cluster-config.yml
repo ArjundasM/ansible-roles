@@ -8,7 +8,7 @@
     group: "{{ hadoop_group }}"
     mode: 0755
     recurse: yes
-  when: ansible_fqdn == "{{ hadoop_namenode }}"
+  when: ansible_fqdn == hadoop_namenode
 
 #Creating datanode directory in all datanode servers
 - name: Creating datanode directory
@@ -19,7 +19,7 @@
     group: "{{ hadoop_group }}"
     mode: 0755
     recurse: yes
-  when: ansible_fqdn != "{{ hadoop_namenode }}"
+  when: ansible_fqdn != hadoop_namenode
 
 #Creating temporary directory in all servers
 - name: Creating temporaray directory
@@ -48,7 +48,7 @@
     owner: "{{ hadoop_user }}"
     group: "{{ hadoop_group }}"
     mode: 0644
-  when: ansible_fqdn == "{{ hadoop_namenode }}"
+  when: ansible_fqdn ==  hadoop_namenode
 
 #Copying hdfs-site file for datanodes
 - name: Copying hdfs-site file for datanode
@@ -58,7 +58,7 @@
     owner: "{{ hadoop_user }}"
     group: "{{ hadoop_group }}"
     mode: 0644
-  when: ansible_fqdn != "{{ hadoop_namenode }}"
+  when: ansible_fqdn != hadoop_namenode
 
 #Copying slaves file to namenode
 - name: Copying slave file
@@ -68,7 +68,7 @@
     owner: "{{ hadoop_user }}"
     group: "{{ hadoop_group }}"
     mode: 0644
-  when: ansible_fqdn == "{{ hadoop_namenode }}"
+  when: ansible_fqdn == hadoop_namenode
 
 #Adding java home to hadoop-env file of all servers
 - name: Adding java_home to hadoop-env file
