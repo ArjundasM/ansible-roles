@@ -1,23 +1,16 @@
 ---
-#Specify the install mode single | cluster | datanode
-hadoop_install_mode: 'datanode'
-hadoop_install_dir: /ebs
-#Enter the user name and group to configure hadoop
-hadoop_user: hdfs
-hadoop_group: hadoop
-#Specify directory location for datadirectory
-hadoop_store_dir: /ebs/hadoop_store
+#THIS IS DEFULT VARIABLES DONT CHANGE UNNECESSARILY
+
 #Metion IP address or hostname of namenode
-hadoop_namenode: "{{ hostvars[groups['namenode'][0]]['ansible_fqdn'] }}"
-#hadoop_namenode: 
+hadoop_namenode: "{{ hostvars[groups[namenode_group][0]]['ansible_fqdn'] }}"
+
 #Mention keyfile name to create ssh key
 hadoop_keyfile: id_rsa
-#Enter ansible server location to store keyfile
+
+#Enter the location in ansible server to store key
 hadoop_keylocation: /tmp
-#Enter required hadoop version to download
-hadoop_version_major: 2
-hadoop_version_minor: 7
-hadoop_version_patch: 3
+
+#Haddop URL to download
 hadoop_version: "hadoop-{{ hadoop_version_major }}.{{hadoop_version_minor }}.{{ hadoop_version_patch }}"
 hadoop_url_prefix: "https://archive.apache.org/dist/hadoop/core"
 hadoop_url: "{{ hadoop_url_prefix }}/{{ hadoop_version }}/{{ hadoop_version }}.tar.gz"

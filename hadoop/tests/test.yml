@@ -5,6 +5,11 @@
   remote_user: ubuntu
   become: yes
   become_method: sudo
+  vars:
+    namenode_group: namenode
+    datanode_group: datanode
+    newdatanode_group: newdatanode
+    hadoop_parent: hadoop
   roles:
     - java-8
-    - hadoop-4
+    - hadoop

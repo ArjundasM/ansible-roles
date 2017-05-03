@@ -28,7 +28,7 @@
     state: touch
     owner: "{{ hadoop_user }}"
     group: "{{ hadoop_group }}"
-    mode: 0664
+    mode: 0600
   when: auth.stat.exists == False
 
 #Checking old private key are present or not
