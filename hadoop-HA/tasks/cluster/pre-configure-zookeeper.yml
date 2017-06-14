@@ -1,0 +1,39 @@
+---
+#Creating install drectory for zookeeper
+- name: Creating install directory if not present
+  file:
+    path: "{{ pkg_install_dir }}"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    recurse: yes
+    mode: 0755
+#Creating user and group in zookeeper servers
+- name: Creating user group if not exists
+  group: name={{ ha_group }}  state=present
+- name: Creating user if not exists
+  user: 
+    name: "{{ ha_user }}"
+    shell: /bin/bash 
+    group: "{{ ha_group }}" 
+    append: yes
+
+#Creating journalnode directory in all zookeeper servers
+- name: Creating journalnode directory if not present
+  file:
+    path: "{{ journalnode_data_dir }}"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    recurse: yes
+    mode: 0755
+
+#Creating data directory for zookeeper servers
+- name: Creating zookeeper data directory
+  file:
+    path: "{{ zookeeper_data_dir }}"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    recurse: yes
+    mode: 0755

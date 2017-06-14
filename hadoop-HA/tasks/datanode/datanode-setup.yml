@@ -1,0 +1,8 @@
+---
+- include: pre-configure-datanode.yml
+  when: inventory_hostname in groups[newdatanode_group]
+- include: datanode-config.yml
+  when: inventory_hostname in groups[newdatanode_group]
+- include: ssh-keygen-datanode.yml
+- include: ssh-keyscan.yml
+ 

@@ -1,0 +1,20 @@
+galaxy_info:
+  author: arjundasm
+  description: Setting up Hadoop High Availability configuration
+  company:  RZT
+  license: MIT
+  min_ansible_version: 2
+  platforms:
+#  - name: Redhat
+#    versions:
+#     - 6
+#     - 7
+  - name: Ubuntu
+    versions:
+    - 14.04
+    - 16.04
+  galaxy_tags:
+    - hadoop
+    - cluster
+    - hadoop-ha
+dependencies: []

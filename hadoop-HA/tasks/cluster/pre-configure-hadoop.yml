@@ -1,0 +1,62 @@
+---
+#Creating install directory in all servers
+- name: Creating install directory if not present
+  file:
+    path: "{{ pkg_install_dir }}"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    recurse: yes
+    mode: 0755
+
+#Creating data_store directory in all servers
+- name: Creating store directory if not present
+  file: 
+    path: "{{ ha_store_dir }}"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    recurse: yes
+    mode: 0755
+
+#Creating user and group in all servers
+- name: Creating user group if not exists
+  group: name={{ ha_group }}  state=present
+- name: Creating user if not exists
+  user: 
+    name: "{{ ha_user }}"
+    shell: /bin/bash 
+    group: "{{ ha_group }}" 
+    append: yes
+
+#Creating namenode directory in namenode servers
+- name: Creating namenode directory in namenodes
+  file:
+    path: "{{ ha_store_dir }}/hdfs/namenode"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+    recurse: yes
+  when: inventory_hostname in groups[namenode_group]
+
+#Creating datanode directory in datanode servers
+- name: Creating datanode directory
+  file:
+    path: "{{ ha_store_dir }}/hdfs/datanode"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+    recurse: yes
+  when: ansible_fqdn != ha_namenode1 and ansible_fqdn != ha_namenode2
+
+#Creating temporary directory in all servers 
+- name: Creating temporaray directory
+  file:
+    path: "{{ ha_tmp_dir }}"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+    recurse: yes

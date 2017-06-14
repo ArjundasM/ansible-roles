@@ -1,0 +1,14 @@
+---
+#SUB-TASKS INCLUDED FOR CREATING HA CLUSTER
+- include: cluster/pre-configure-hadoop.yml
+  when: inventory_hostname in groups[hadoop_parent]
+- include: cluster/pre-configure-zookeeper.yml
+  when: inventory_hostname in groups[zoo_nodes]
+- include: cluster/download.yml
+- include: cluster/zookeeper.yml
+  when: inventory_hostname in groups[zoo_nodes]
+- include: cluster/ssh-keygen.yml
+- include: cluster/ssh-keyscan.yml
+- include: cluster/environment.yml
+- include: cluster/cluster-config.yml
+- include: cluster/start-hadoop.yml

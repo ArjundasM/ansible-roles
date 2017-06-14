@@ -1,0 +1,75 @@
+---
+#THIS FILE WILL CREATE REQUIRED DIRECTORIES AND PATH
+# CHECKING DOWNLOADING DIRECTORY PRESENT OR NOT
+- name: Check install directory present or not
+  stat: path={{ pkg_install_dir }}
+  register: location
+- name: Creating install directory if not present
+  file:
+    path: "{{ pkg_install_dir }}"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    recurse: yes
+    mode: 0755
+  when: location.stat.exists == false
+#  become: yes
+#  become_method: sudo
+#CHECKING HADOOP STORE DIRECTORY PRESENT OR NOT
+- name: Check store directory present or not
+  stat: path={{ ha_store_dir }}
+  register: store
+
+- name: Creating store directory if not present
+  file: 
+    path: "{{ ha_store_dir }}"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    recurse: yes
+    mode: 0755
+  when: store.stat.exists == False
+#  become: yes
+#  become_method: sudo
+
+#CREATING USER GROUP IF NOT EXISTING
+- name: Creating user group if not exists
+  group: name={{ ha_group }}  state=present
+- name: Creating user if not exists
+  user: 
+    name: "{{ ha_user }}"
+    shell: /bin/bash 
+    group: "{{ ha_group }}" 
+    append: yes
+
+#CREATING NAMENODE DIRECTORY IN NAMENODE SERVERS
+- name: Creating namenode directory in namenodes
+  file:
+    path: "{{ ha_store_dir }}/hdfs/namenode"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+    recurse: yes
+  when: inventory_hostname in groups[namenode_group]
+
+#CREATING DATANODE DATA DIRECTORY IN ALL DATANODE
+- name: Creating datanode directory
+  file:
+    path: "{{ ha_store_dir }}/hdfs/datanode"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+    recurse: yes
+  when: ansible_fqdn != ha_namenode1 and ansible_fqdn != ha_namenode2
+
+#CREATING TEMPORARY DIRECTORY IN ALL SERVERS
+- name: Creating temporaray directory
+  file:
+    path: "{{ ha_tmp_dir }}"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+    recurse: yes

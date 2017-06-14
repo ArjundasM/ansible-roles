@@ -1,0 +1,64 @@
+---
+#Copying core-site file to all servers
+- name: Copying core-site file
+  template:
+    src: core-site.xml.j2
+    dest: "{{ ha_home_dir }}/etc/hadoop/core-site.xml"
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+
+#Copying hdfs-site file for datanodes
+- name: Copying hdfs-site file for datanode
+  template:
+    src: hdfs-site.xml-datanode.j2
+    dest: "{{ ha_home_dir }}/etc/hadoop/hdfs-site.xml"
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+
+- name: Find java version
+  command: java -version 2>&1 | head -n 1 | awk -F '.' '{print $2}'
+  register: version
+
+- set_fact: java_version= {{ version }}
+
+#To find java_home for redhat
+- name: Find java_home for redhat
+  find:
+    path: "/usr/lib/jvm"
+    patterns: "^java-1.{{ java_version }}.0-*"
+    file_type: directory
+    recurse: yes
+    use_regex: True
+  register: redhat
+  when: ansible_distribution == "RedHat"
+
+- name: Find java_home for ubuntu
+  find:
+    path: "/usr/lib/jvm"
+    patterns: "^java-{{ java_version }}-*"
+    file_type: directory
+    recurse: yes
+    use_regex: True
+  register: ubuntu
+  when: ansible_distribution == "Ubuntu"
+
+
+#Adding java home to hadoop-env file of all servers
+- name: Adding java_home to hadoop-env file for ubuntu
+  lineinfile:
+    dest: "{{ ha_home_dir }}/etc/hadoop/hadoop-env.sh"
+    regexp: "JAVA_HOME="
+    line: "export JAVA_HOME={{ item.path }}"
+  with_items: "{{ ubuntu.files }}"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Adding java_home to hadoop-env file for redhat
+  lineinfile:
+    dest: "{{ ha_home_dir }}/etc/hadoop/hadoop-env.sh"
+    regexp: "JAVA_HOME="
+    line: "export JAVA_HOME={{ item.path }}/jre"
+  with_items: "{{ redhat.files }}"
+  when: ansible_distribution == "RedHat"
+

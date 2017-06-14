@@ -1,0 +1,49 @@
+---
+#DOWNLOADING HADOOP PACKAGE
+- name: Checking hadoop version
+  stat: path={{ pkg_install_dir }}/{{ ha_version }}.tar.gz
+  register: hapresent
+
+- name: Downloading hadoop-{{ ha_version }}
+  get_url:
+    url: "{{ ha_url }}"
+    dest: "{{ pkg_install_dir }}"
+  register: result
+  until: result|success
+  retries: 5
+  delay: 2
+  when: hapresent.stat.exists == False
+
+#DOWNLOADING ZOOKEEPER PACKAGE
+
+- name: Download zookeeper-{{ zoo_version }}
+  get_url:
+    url: "{{ zoo_url }}"
+    dest: "{{ pkg_install_dir }}"
+  register: result
+  until: result|success
+  retries: 5
+  delay: 2
+  when: inventory_hostname in groups[zoo_nodes]
+
+#EXTRACTING HADOOP PACKAGE
+- name: Extracting hadoop-{{ ha_version }}
+  unarchive:
+    src: "{{ pkg_install_dir }}/{{ ha_version }}.tar.gz"
+    dest: "{{ pkg_install_dir }}"
+    remote_src: true
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+
+#EXTRACTING ZOOKEEPER PACKAGE
+- name: Extracting zookeeper-{{ zoo_version }}
+  unarchive:
+    src: "{{ pkg_install_dir }}/{{ zoo_version }}.tar.gz"
+    dest: "{{ pkg_install_dir }}"
+    remote_src: true
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+  when: inventory_hostname in groups[zoo_nodes]
+

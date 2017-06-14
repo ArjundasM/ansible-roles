@@ -1,0 +1,84 @@
+---
+#Starting Journal nodes only in zookeeper servers
+- name: Starting Journalnode servers
+  command: "{{ ha_home_dir }}/sbin/hadoop-daemon.sh start journalnode"
+  become: True
+  become_user: "{{ ha_user }}"
+  when: inventory_hostname in groups[zoo_nodes]
+
+#Formating namenodes
+- name: Formating the namenode servers-2
+  command: "{{ ha_home_dir }}/bin/hdfs namenode -format -force"
+  become: True
+  become_user: "{{ ha_user }}"
+  when: ansible_fqdn == ha_namenode2
+
+- name: Foramating the namenode servers-1
+  command: "{{ ha_home_dir }}/bin/hdfs namenode -format -force"
+  become: True
+  become_user: "{{ ha_user }}"
+  when: ansible_fqdn == ha_namenode1
+
+#Starting namenode servers
+- name: Starting namenode servers
+  command: "{{ ha_home_dir }}/sbin/hadoop-daemon.sh start namenode"
+  become: True
+  become_user: "{{ ha_user }}"
+  when: inventory_hostname in groups[namenode_group]
+
+#Starting bootstrap process in namenode2
+- name: Start bootstrap process in namenode2
+  command: "{{ ha_home_dir }}/bin/hdfs namenode -bootstrapStandby -force"
+  become: True
+  become_user: "{{ ha_user }}"
+  when: ansible_fqdn == ha_namenode2
+
+#Starting zookeeper in all zookeeper servers
+- name: Start zookeeper daemon in all zookeeper servers
+  command: "{{ zoo_home_dir }}/bin/zkServer.sh start"
+  become: True
+  become_user: "{{ ha_user }}"
+  when: inventory_hostname in groups[zoo_nodes]
+
+#Formating zookeeper failover controller in namenode-2
+- name: Format zookeeper failovercontroller in namenode-2
+  command: "{{ ha_home_dir }}/bin/hdfs zkfc -formatZK -force"
+  become: True
+  become_user: "{{ ha_user }}"
+  when: ansible_fqdn == ha_namenode2
+
+#Starting failover controller in namenode-2
+- name: Start failover controler in namenode-2
+  command: "{{ ha_home_dir }}/sbin/hadoop-daemon.sh start zkfc"
+  become: True
+  become_user: "{{ ha_user }}"
+  when: ansible_fqdn == ha_namenode2
+
+#Formating zookeeper failover controller in namenode-1
+- name: Format zookeeper failovercontroller in namenode-1
+  command: "{{ ha_home_dir }}/bin/hdfs zkfc -formatZK -force"
+  become: True
+  become_user: "{{ ha_user }}"
+  when: ansible_fqdn == ha_namenode1
+
+#Starting failover controller in namenode-1
+- name: Start failover controler in namenode-1
+  command: "{{ ha_home_dir }}/sbin/hadoop-daemon.sh start zkfc"
+  become: True
+  become_user: "{{ ha_user }}"
+  when: ansible_fqdn == ha_namenode1
+
+#After staring failover controller initially started namenode will be goes down.So we need to turn it up.
+- name: Starting namenode servers for failovercontroller
+  command: "{{ ha_home_dir }}/sbin/hadoop-daemon.sh start namenode"
+  become: True
+  become_user: "{{ ha_user }}"
+  when: ansible_fqdn == ha_namenode2
+
+#Starting all datanodes
+- name: Starting datanodes
+  command: "{{ ha_home_dir }}/sbin/hadoop-daemon.sh start datanode"
+  become: True
+  become_user: "{{ ha_user }}"
+  when: inventory_hostname in groups[datanode_group]
+

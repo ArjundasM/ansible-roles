@@ -1,0 +1,22 @@
+#SAMPLE HOST FILE FOR HADOOP HIGH AVAILABILITY SETUP
+[namenode]
+IP-Namenode-1
+IP-Namenode-2
+
+[datanode]
+IP-datanode-1
+.
+.
+IP-datanode-n
+
+[newdatanode]
+
+
+[hadoop:children]
+namenode
+datanode
+
+[zookeeper]
+IP-zookeeper-1
+IP-zookeeper-2
+IP-zookeeper-3

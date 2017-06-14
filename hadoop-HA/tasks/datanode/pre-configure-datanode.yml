@@ -1,0 +1,97 @@
+---
+#THIS FILE WILL CREATE REQUIRED DIRECTORIES AND PATH
+- name: Creating install directory if not present
+  file:
+    path: "{{ pkg_install_dir }}"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    recurse: yes
+    mode: 0755
+
+- name: Creating store directory if not present
+  file: 
+    path: "{{ ha_store_dir }}"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    recurse: yes
+    mode: 0755
+
+#CREATING USER GROUP IF NOT EXISTING
+- name: Creating user group if not exists
+  group: name={{ ha_group }}  state=present
+- name: Creating user if not exists
+  user: 
+    name: "{{ ha_user }}"
+    shell: /bin/bash 
+    group: "{{ ha_group }}" 
+    append: yes
+
+#CREATING DATANODE DATA DIRECTORY IN ALL DATANODE
+- name: Creating datanode directory
+  file:
+    path: "{{ ha_store_dir }}/hdfs/datanode"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+    recurse: yes
+
+#CREATING TEMPORARY DIRECTORY IN ALL SERVERS
+- name: Creating temporaray directory
+  file:
+    path: "{{ ha_tmp_dir }}"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+    recurse: yes
+
+#DOWNLOADING HADOOP PACKAGE
+- name: Checking hadoop version
+  stat: path={{ pkg_install_dir }}/{{ ha_version }}.tar.gz
+  register: hapresent
+
+- name: Downloading hadoop-{{ ha_version }}
+  get_url:
+    url: "{{ ha_url }}"
+    dest: "{{ pkg_install_dir }}"
+  register: result
+  until: result|success
+  retries: 5
+  delay: 2
+  when: hapresent.stat.exists == False
+
+#EXTRACTING HADOOP PACKAGE
+- name: Extracting hadoop-{{ ha_version }}
+  unarchive:
+    src: "{{ pkg_install_dir }}/{{ ha_version }}.tar.gz"
+    dest: "{{ pkg_install_dir }}"
+    remote_src: true
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+  when: inventory_hostname in groups[newdatanode_group]
+
+#ADDING ENVIRONMENT VARIABLES
+- name: Adding environment variables for hadoop in bashrc file
+  blockinfile:
+    dest: /home/{{ ha_user }}/.bashrc
+    block: |
+      #HADOOP VARIABLES START
+      export HADOOP_HOME={{ ha_home_dir }}
+      export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+      export HADOOP_MAPRED_HOME=$HADOOP_HOME
+      export HADOOP_COMMON_HOME=$HADOOP_HOME
+      export HADOOP_HDFS_HOME=$HADOOP_HOME
+      export YARN_HOME=$HADOOP_HOME
+      export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+      export HADOOP_OPTS="$HADOOP_OPTS -Djava.library.path=$HADOOP_HOME/lib/native"
+      export CLASSPATH=$CLASSPATH:/usr/local/hadoop/lib/*:.
+      export HADOOP_OPTS="$HADOOP_OPTS -Djava.security.egd=file:{{ ha_store_dir }}/temp/tmp"
+      #HADOOP VARIABLES END
+
+- name: Executnge source command
+  shell: ". /home/{{ ha_user }}/.bashrc"
+

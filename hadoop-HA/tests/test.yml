@@ -1,0 +1,16 @@
+---
+- name: Hadoop High Availability installation
+  gather_facts: yes
+  hosts: hadoop,zookeeper
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+    namenode_group: namenode
+    newdatanode_group: newdatanode
+    zoo_nodes: zookeeper
+    hadoop_parent: hadoop
+    datanode_group: datanode
+  roles:
+    - java-8
+    - hadoop-ha

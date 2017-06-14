@@ -1,0 +1,83 @@
+---
+- name: Adding environment variables for hadoop in bashrc file
+  blockinfile:
+    dest: /home/{{ ha_user }}/.bashrc
+    block: |
+      #JAVA VARIABLES START
+      export JAVA_HOME=
+      export PATH=$PATH:$JAVA_HOME/bin
+      #JAVA VARIABLES END
+- name: Adding environment variables for hadoop in bashrc file
+  blockinfile:
+    dest: /home/{{ ha_user }}/.bashrc 
+    block: |
+      #HADOOP VARIABLES START
+      export HADOOP_HOME={{ ha_home_dir }}
+      export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+      export HADOOP_MAPRED_HOME=$HADOOP_HOME
+      export HADOOP_COMMON_HOME=$HADOOP_HOME
+      export HADOOP_HDFS_HOME=$HADOOP_HOME
+      export YARN_HOME=$HADOOP_HOME
+      export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native
+      export HADOOP_OPTS="$HADOOP_OPTS -Djava.library.path=$HADOOP_HOME/lib/native"
+      export CLASSPATH=$CLASSPATH:/usr/local/hadoop/lib/*:.
+      export HADOOP_OPTS="$HADOOP_OPTS -Djava.security.egd=file:{{ ha_store_dir }}/temp/tmp"
+      #HADOOP VARIABLES END
+  when: inventory_hostname in groups[hadoop_parent]
+
+- name: Adding environment variable in bashrc file
+  blockinfile:
+    dest: /home/{{ ha_user }}/.bashrc
+    block: |
+      #ZOOKEEPER VARIABLES START
+      export ZOOKEEPER_HOME={{ zoo_home_dir }}
+      export HADOOP_HOME={{ ha_home_dir }}
+      export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$ZOOKEEPER_HOME/bin
+      #ZOOKEEPER VARIABLES END
+  when: inventory_hostname in groups[zoo_nodes]
+
+#To find java_home for redhat
+- name: Find java_home for redhat
+  find:
+    path: "/usr/lib/jvm"
+    patterns: "^java-1.{{ java_version }}.0-*"
+    file_type: directory
+    recurse: yes
+    use_regex: True
+  register: redhat
+  when: ansible_distribution == "RedHat"
+
+
+- name: Find java_home for ubuntu
+  find:
+    path: "/usr/lib/jvm"
+    patterns: "^java-{{ java_version }}-*"
+    file_type: directory
+    recurse: yes
+    use_regex: True
+  register: ubuntu
+  when: ansible_distribution == "Ubuntu"
+
+
+#Adding java home to hadoop-env file of all servers
+- name: Adding java_home to hadoop-env file for ubuntu
+  lineinfile:
+    dest: "/home/{{ ha_user }}/.bashrc"
+    regexp: "export JAVA_HOME="
+    line: "export JAVA_HOME={{ item.path }}"
+  with_items: "{{ ubuntu.files }}"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Adding java_home to hadoop-env file for redhat
+  lineinfile:
+    dest: "/home/{{ ha_home/.bashrc"
+    regexp: "export JAVA_HOME="
+    line: "export JAVA_HOME={{ item.path }}/jre"
+  with_items: "{{ redhat.files }}"
+  when: ansible_distribution == "RedHat"
+
+- name: Executnge source command
+  shell: ". /home/{{ ha_user }}/.bashrc"
+
+
+

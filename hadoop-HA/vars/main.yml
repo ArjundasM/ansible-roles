@@ -1,0 +1,30 @@
+---
+#INSTALLAATION MODE
+#  Options:
+#  - cluster : For setting up entire cluster
+#  - datanode : For adding new datanode to existing HA cluster
+         
+ha_install_mode: 'datanode'
+
+#USER AND GROUP TO RUN PACKAGE
+ha_user: ubuntu
+ha_group: ubuntu
+
+#LOCATION TO STORE DATA OF DATANODE AND NAMENODE
+pkg_install_dir: /ebs
+ha_store_dir: "{{ pkg_install_dir }}/hadoop_store"
+journalnode_data_dir: /ebs/HA/data/jn
+zookeeper_data_dir: /ebs/HA/data/zookeeper
+ha_tmp_dir: /ebs/hadoop_store/tmp
+
+ha_replication: 3
+#HADOOP VERSION 
+ha_version_major: 2
+ha_version_minor: 6
+ha_version_patch: 0
+
+#ZOOKEEPER VERSION
+zoo_version_major: 3
+zoo_version_minor: 4
+zoo_version_patch: 9
+

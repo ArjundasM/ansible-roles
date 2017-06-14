@@ -1,0 +1,43 @@
+---
+#CONFIGURATIONS OF ZOOKEEPER
+- name: Copying zookeeper configuration file
+  template:
+    src: zoo.cfg.j2
+    dest: "{{ zoo_home_dir }}/conf/zoo.cfg"
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+  when: inventory_hostname in groups[zoo_nodes]
+#CREATING MYID IF IT PRESENT
+- name: Checking if myid file present or not
+  stat: path={{ zookeeper_data_dir }}/conf/myid
+  register: myid
+
+- name: Deleting myid file if present
+#  command: "rm {{ zookeeper_data_dir }}/conf/myid"
+  file:
+    path: "{{ zookeeper_data_dir }}/myid"
+    state: absent
+  when: myid.stat.exists == false
+#CREATING ID FILE IN ZOOKEEPER NODES
+- name: Creating ID files
+  file:
+    path: "{{ zookeeper_data_dir }}/myid"
+    state: touch 
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0644
+
+#ADDING VALUE IN MYDATA FILE IN ZOOKEEPER SERVERS
+- name: Adding value-1 in zookeeper-1
+  shell: "echo 1 >> {{ zookeeper_data_dir }}/myid"
+  when: ansible_fqdn == zoo_node1
+
+- name: Adding value-2 in zookeeper-2
+  shell: "echo 2 >> {{ zookeeper_data_dir }}/myid"
+  when: ansible_fqdn == zoo_node2
+
+- name: Adding value-3 in zookeeper-3
+  shell: "echo 3 >> {{ zookeeper_data_dir }}/myid"
+  when: ansible_fqdn == zoo_node3
+

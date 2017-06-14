@@ -1,0 +1,8 @@
+---
+#SUB-TASKS TO ADD NEW DATANODES TO EXISTING CLUSTER
+- include: datanode/pre-configure-datanode.yml
+  when: inventory_hostname in groups[newdatanode_group]
+- include: datanode/datanode-config.yml
+  when: inventory_hostname in groups[newdatanode_group]
+- include: datanode/ssh-keygen-datanode.yml
+- include: datanode/ssh-keyscan.yml

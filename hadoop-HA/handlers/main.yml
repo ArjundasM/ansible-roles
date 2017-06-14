@@ -1,0 +1,21 @@
+---
+#TO START JOURNAL NODES
+- name: Start Journalnode
+  command: "hadoop-daemon.sh start journalnode"
+  become: yes
+  become_user: "{{ ha_user }}"
+
+- name: Format namenode2
+  command: "hdfs namenode -format -force"
+  become: yes
+  become_user: "{{ ha_user }}"
+
+- name: Format namenode1
+  command: "hdfs namenode -format -force"
+  become: yes
+  become_user: "{{ ha_user }}"
+
+- name: Start namenode
+  command: "hadoop-daemon.sh start namenode"
+
+

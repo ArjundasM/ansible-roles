@@ -1,0 +1,58 @@
+---
+#If .ssh directory not present, creating the directory in both namenode and datanode
+- name: Creating .ssh directory if not present
+  file:
+    path: /home/{{ ha_user }}/.ssh
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0700
+  when: inventory_hostname in groups[newdatanode_group]
+
+#If authorized_keys file not present, creating in both namenode and datanodes
+- name: Creating authorized_keys file if not present
+  file: 
+    dest: /home/{{ ha_user }}/.ssh/authorized_keys
+    state: touch
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0600
+  when: inventory_hostname in groups[newdatanode_group]
+
+#Downloading public key from namenode1 server to ansible server
+- name: Downloading public key of namenode-1 to ansible server
+  fetch: 
+    src: /home/{{ ha_user }}/.ssh/nn1
+    dest: "{{ ha_keylocation }}/nn1"
+    flat: yes
+  when: ansible_fqdn == ha_namenode1
+
+#Downloading public key from namenode2 server to ansible server
+- name: Downloading public key of namenode-2 to ansible server
+  fetch:
+    src: /home/{{ ha_user }}/.ssh/nn2
+    dest: "{{ ha_keylocation }}/nn2"
+    flat: yes
+  when: ansible_fqdn == ha_namenode2
+
+
+#Copying public key to all datanodes
+- name: Copying keyfiles to all datanodes
+  copy:
+    src: "{{ ha_keylocation }}/{{ item }}"
+    dest: "/home/{{ ha_user }}/.ssh"
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0600
+  with_items:
+    - nn1
+    - nn2
+  when: inventory_hostname in groups[newdatanode_group]
+
+#Adding public key to all servers
+- name: Adding keyfile to servers authorized_keys file
+  shell: "cat /home/{{ ha_user }}/.ssh/{{ item }} >> /home/{{ ha_user }}/.ssh/authorized_keys"
+  with_items:
+    - nn1
+    - nn2
+  when: inventory_hostname in groups[newdatanode_group]

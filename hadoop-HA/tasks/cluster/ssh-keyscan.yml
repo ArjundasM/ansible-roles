@@ -1,0 +1,48 @@
+---
+#Purpose of this file is to create ssh-fingerprint and add ti known_hosts file to avoid yes/no question while conneting to datanode
+#Copying slave file from namenode to another location to add host address to create ssh fingerprints
+- name: Copying slave file for keyscan
+  command: "cp {{ ha_home_dir }}/etc/hadoop/slaves {{ pkg_install_dir }}"
+  when: ansible_fqdn == ha_namenode1
+
+- name: Changing file permissions
+  file: 
+    path: "{{ pkg_install_dir }}/slaves"
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+  when: ansible_fqdn == ha_namenode1
+
+- name: Adding lines in slaves file
+  lineinfile:
+    path: "{{ pkg_install_dir }}/slaves"
+    line: "{{ item }}"
+  with_items:
+    - 0.0.0.0
+    - localhost
+    - "{{ ha_namenode1 }}"
+    - "{{ ha_namenode2 }}"
+    - "{{ zoo_node1 }}"
+    - "{{ zoo_node2 }}"
+    - "{{ zoo_node3 }}"
+  when: ansible_fqdn == ha_namenode1
+
+- name: Copying slave file to ansible server
+  fetch:
+    src: "{{ pkg_install_dir }}/slaves"
+    dest: /tmp/slaves
+    flat: yes
+  when: ansible_fqdn == ha_namenode1
+
+- name: Accept new ssh fingerprints in namenode-1
+  shell: "ssh-keyscan -H -t ecdsa-sha2-nistp256 {{ item }} >> /home/{{ ha_user }}/.ssh/known_hosts"
+  with_lines:
+    - " cat /tmp/slaves"
+  when: ansible_fqdn == ha_namenode1
+
+- name: Accept new ssh fingerprints in namenode-2
+  shell: "ssh-keyscan -H -t ecdsa-sha2-nistp256 {{ item }} >> /home/{{ ha_user }}/.ssh/known_hosts"
+  with_lines:
+    - " cat /tmp/slaves"
+  when: ansible_fqdn == ha_namenode2
+

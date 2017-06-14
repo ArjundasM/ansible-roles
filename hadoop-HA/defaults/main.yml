@@ -1,0 +1,28 @@
+---
+#NAMENODE FQDN VALUES
+ha_namenode1: "{{ hostvars[groups[namenode_group][0]]['ansible_fqdn'] }}"
+ha_namenode2: "{{ hostvars[groups[namenode_group][1]]['ansible_fqdn'] }}"
+
+#ZOOKEEPER NODES
+zoo_node1: "{{ hostvars[groups[zoo_nodes][0]]['ansible_fqdn'] }}"
+zoo_node2: "{{ hostvars[groups[zoo_nodes][1]]['ansible_fqdn'] }}"
+zoo_node3: "{{ hostvars[groups[zoo_nodes][2]]['ansible_fqdn'] }}"
+
+#ZOOKEEPER FQDN
+
+ha_keyfile: id_rsa
+ha_keylocation: /tmp
+
+#HADOOP VERSION 
+ha_version: "hadoop-{{ ha_version_major }}.{{ ha_version_minor }}.{{ ha_version_patch }}"
+ha_url_prefix: "https://archive.apache.org/dist/hadoop/core"
+ha_url: "{{ ha_url_prefix }}/{{ ha_version }}/{{ ha_version }}.tar.gz"
+ha_home_dir: "{{ pkg_install_dir }}/{{ ha_version }}"
+
+#ZOOKEEPER
+zoo_version: "zookeeper-{{ zoo_version_major }}.{{ zoo_version_minor }}.{{ zoo_version_patch }}"
+zoo_url_prefix: "https://archive.apache.org/dist/zookeeper"
+zoo_url: "{{ zoo_url_prefix }}/{{ zoo_version }}/{{ zoo_version }}.tar.gz"
+zoo_home_dir: "{{ pkg_install_dir }}/{{ zoo_version }}"
+journal_datadir: /ebs/HA/data/jn
+

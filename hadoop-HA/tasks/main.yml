@@ -1,0 +1,9 @@
+---
+#SUB TASK TO CREATE A CLUSTER
+- include: cluster-setup.yml
+  when: ha_install_mode == 'cluster'
+
+#SUB-TASK TO ADDITIONAL DATANODES TO EXISTING HDFS-HA CLSUTER
+- include: datanode-setup.yml
+  when: ha_install_mode == 'datanode'
+
