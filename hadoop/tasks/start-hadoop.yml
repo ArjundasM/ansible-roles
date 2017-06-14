@@ -5,4 +5,3 @@
   become_user: "{{ hadoop_user }}"
   when: ansible_fqdn ==  hadoop_namenode
   notify: Start hadoop
-#  ansible_ssh_pipelining: true

@@ -7,12 +7,12 @@
     owner: "{{ hadoop_user }}"
     group: "{{ hadoop_group }}"
     mode: 0600
-  when: inventory_hostname in groups['newdatanode']
+  when: inventory_hostname in groups[newdatanode_group]
 
 #Adding public key of all datanode to authorized_keys file 
 - name: Adding keyfile to all datanodes authorized_keys file
   shell: "cat /home/{{ hadoop_user }}/.ssh/{{ hadoop_keyfile }}.pub >> /home/{{ hadoop_user }}/.ssh/authorized_keys"
-  when: inventory_hostname in groups['newdatanode']
+  when: inventory_hostname in groups[newdatanode_group]
 
 #Creating datanode directory in all datanode server
 - name: Creating datanode directory
@@ -23,7 +23,7 @@
     group: "{{ hadoop_group }}"
     mode: 0755
     recurse: yes
-  when: inventory_hostname in groups['newdatanode']
+  when: inventory_hostname in groups[newdatanode_group]
 
 #Creating temporary directory in all server
 - name: Creating temporaray directory
@@ -34,7 +34,7 @@
     group: "{{ hadoop_group }}"
     mode: 0755
     recurse: yes
-  when: inventory_hostname in groups['newdatanode']
+  when: inventory_hostname in groups[newdatanode_group]
 
 #Copying core-site file to all servers
 - name: Copying core-site file
@@ -44,7 +44,7 @@
     owner: "{{ hadoop_user }}"
     group: "{{ hadoop_group }}"
     mode: 0644
-  when: inventory_hostname in groups['newdatanode']
+  when: inventory_hostname in groups[newdatanode_group]
 
 #Copying hdfs-site file for datanodes
 - name: Copying hdfs-site file for datanode
@@ -54,7 +54,7 @@
     owner: "{{ hadoop_user }}"
     group: "{{ hadoop_group }}"
     mode: 0644
-  when: inventory_hostname in groups['newdatanode']
+  when: inventory_hostname in groups[newdatanode_group]
 
 #Copying slaves file to namenode
 - name: Copying slave file

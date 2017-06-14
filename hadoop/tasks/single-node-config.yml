@@ -53,6 +53,12 @@
     group: "{{ hadoop_group }}"
     mode: 0644
 
+- name: Find java version
+  command: java -version 2>&1 | head -n 1 | awk -F '.' '{print $2}'
+  register: version
+
+- set_fact: java_version= {{ version }}
+
 
 #To find java_home for redhat
 - name: Find java_home for redhat
