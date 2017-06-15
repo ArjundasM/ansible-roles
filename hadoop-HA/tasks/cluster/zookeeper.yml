@@ -8,6 +8,21 @@
     group: "{{ ha_group }}"
     mode: 0755
   when: inventory_hostname in groups[zoo_nodes]
+
+- name: Adding log directory for zookeeper 
+  lineinfile:
+    path: "{{ zoo_home_dir }}/bin/zkServer.sh"
+    line: 'ZOO_LOG_DIR=/var/log/zookeeper'
+    insertafter: '# use POSTIX interface, symlink is followed automatically'
+
+- name: Creating log directory for zookeeper
+  file:
+    path: "{{ zoo_log_dir }}"
+    state: directory
+    owner: "{{ ha_user }}"
+    group: "{{ ha_group }}"
+    mode: 0755
+
 #CREATING MYID IF IT PRESENT
 - name: Checking if myid file present or not
   stat: path={{ zookeeper_data_dir }}/conf/myid

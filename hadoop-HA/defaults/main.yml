@@ -25,4 +25,5 @@ zoo_url_prefix: "https://archive.apache.org/dist/zookeeper"
 zoo_url: "{{ zoo_url_prefix }}/{{ zoo_version }}/{{ zoo_version }}.tar.gz"
 zoo_home_dir: "{{ pkg_install_dir }}/{{ zoo_version }}"
 journal_datadir: /ebs/HA/data/jn
+zoo_log_dir: /var/log/zookeeper
 

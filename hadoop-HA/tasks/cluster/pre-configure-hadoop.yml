@@ -1,4 +1,15 @@
 ---
+#Creating user and group in all servers
+- name: Creating user group if not exists
+  group: name={{ ha_group }}  state=present
+- name: Creating user if not exists
+  user:
+    name: "{{ ha_user }}"
+    shell: /bin/bash
+    group: "{{ ha_group }}"
+    append: yes
+
+
 #Creating install directory in all servers
 - name: Creating install directory if not present
   file:
@@ -18,16 +29,6 @@
     group: "{{ ha_group }}"
     recurse: yes
     mode: 0755
-
-#Creating user and group in all servers
-- name: Creating user group if not exists
-  group: name={{ ha_group }}  state=present
-- name: Creating user if not exists
-  user: 
-    name: "{{ ha_user }}"
-    shell: /bin/bash 
-    group: "{{ ha_group }}" 
-    append: yes
 
 #Creating namenode directory in namenode servers
 - name: Creating namenode directory in namenodes

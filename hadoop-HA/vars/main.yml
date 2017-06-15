@@ -4,11 +4,11 @@
 #  - cluster : For setting up entire cluster
 #  - datanode : For adding new datanode to existing HA cluster
          
-ha_install_mode: 'datanode'
+ha_install_mode: 'cluster'
 
 #USER AND GROUP TO RUN PACKAGE
-ha_user: ubuntu
-ha_group: ubuntu
+ha_user: hdfs
+ha_group: hadoop
 
 #LOCATION TO STORE DATA OF DATANODE AND NAMENODE
 pkg_install_dir: /ebs
