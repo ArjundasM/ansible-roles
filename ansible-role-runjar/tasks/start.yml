@@ -1,0 +1,20 @@
+---
+- name: Copying start script
+  template:
+    src: start-script.j2
+    dest: "/home/{{ remote_user }}/start-script"
+    owner: "{{ remote_user }}"
+    group: "{{ remote_group }}"
+    mode: 0755
+
+- name: Executing remote script to start jar 
+  command: "bash /home/{{ remote_user }}/start-script"
+  become: true
+  become_user: "{{ remote_user }}"
+
+#- name: Starting {{ artifact_name }} in {{ running_port }}
+#  command: "{{ remote_command }}"
+#  become: true
+#  become_user: "{{ remote_user }}"
+#  async: 30
+#  poll: 0

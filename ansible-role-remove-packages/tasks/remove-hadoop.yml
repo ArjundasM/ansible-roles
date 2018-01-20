@@ -1,0 +1,24 @@
+---
+- name: Checking whether hadoop is installed or not
+  stat: path={{ hadoop_home_dir }}/sbin/stop-dfs.sh
+  register: installed
+
+- name: Stop namenode server
+  shell: "{{ hadoop_home_dir }}/sbin/stop-dfs.sh"
+  when: installed.stat.exists == True and inventory_hostname in groups[namenode_group]
+
+- name: Deleting the hadoop directories
+  file:
+    path: "{{ hadoop_home_dir }}"
+    state: absent
+
+- name: Deleting the hadoop directories
+  file:
+    path: "{{ hadoop_home_dir }}.tar.gz"
+    state: absent
+
+- name: Removing hadoop data directory
+  file:
+    path: "{{ hadoop_store_dir }}"
+    state: absent
+

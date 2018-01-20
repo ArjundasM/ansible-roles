@@ -1,7 +1,0 @@
----
-- name: Formating namenode
-  command: "{{ hadoop_home_dir }}/bin/hdfs namenode -format -force"
-  become: True
-  become_user: "{{ hadoop_user }}"
-  when: ansible_fqdn ==  hadoop_namenode
-  notify: Start hadoop

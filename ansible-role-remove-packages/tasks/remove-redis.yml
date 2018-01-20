@@ -1,0 +1,86 @@
+---
+- name: Checking redis service exists or not
+  stat: path=/etc/init.d/redis_{{ redis_port }}
+  register: service
+
+- name: Stopping the service in redis
+  shell: service redis_{{ redis_port }} stop
+  when: service.stat.exists == True
+
+- name: Disabling the service script in redis
+  shell: update-rc.d -f redis_{{ redis_port }} remove
+  when: service.stat.exists == True
+
+- name: Deleting the service script in redis
+  file:
+    path: /etc/init.d/redis_{{ redis_port }}
+    state: absent
+  when: service.stat.exists == True
+
+- name: Checking redis home directory exists or not
+  stat: path={{ redis_home_dir }}
+  register: home
+
+- name: Deleting the redis home directory
+  file:
+    path: '{{ redis_home_dir }}'
+    state: absent
+  when: home.stat.exists == True
+
+- name: Checking redis tarball exists or not
+  stat: path={{ redis_home_dir }}.tar.gz
+  register: tarball
+
+- name: Deleting the redis tarball  directory
+  file:
+    path: '{{ redis_home_dir }}.tar.gz'
+    state: absent
+  when: tarball.stat.exists == True
+
+
+- name: Checking redis data directory exists or not
+  stat: path={{ redis_data_dir }}
+  register: data
+
+- name: Deleting the redis data directory
+  file:
+    path: '{{ redis_data_dir }}'
+    state: absent
+  when: data.stat.exists == True
+
+- name: Checking redis log directory exists or not
+  stat: path={{ logfile }}
+  register: log
+
+- name: Deleting the redis log directory
+  file:
+    path: '{{ logfile }}'
+    state: absent
+  when: log.stat.exists == True
+
+- name: Checking redis home directory exists or not
+  stat: path={{ redis_config_dir }}
+  register: conf
+
+- name: Deleting the redis configuration directory
+  file:
+    path: '{{ redis_config_dir }}'
+    state: absent
+  when: conf.stat.exists == True
+
+- name: Checking redis commands exists or not
+  stat: path=/usr/local/bin/redis-cli
+  register: command
+
+- name: Deleting the redis configuration directory
+  file:
+    path: /usr/local/bin/{{ item }}
+    state: absent
+  with_items:
+    - redis-cli
+    - redis-check-aof
+    - redis-check-rdb
+    - redis-sentinel
+    - redis-server
+    - redis-benchmark
+  when: command.stat.exists == True

@@ -1,0 +1,9 @@
+---
+- name: Stopping master
+  shell: service spark-master stop
+  when: inventory_hostname in groups['master']
+
+- name: Stopping slaves
+  shell: service spark-slave stop
+  when: inventory_hostname in groups['slaves']
+

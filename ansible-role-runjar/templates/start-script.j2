@@ -1,0 +1,5 @@
+#!/bin/bash
+sudo pkill -f {{ artifact_name }}
+sleep 3
+nohup java -jar -Dserver.port={{ running_port }} {{ java_properties }} {{ remote_source }} >> /dev/null 2>&1 &
+sleep 3

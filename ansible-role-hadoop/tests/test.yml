@@ -1,0 +1,26 @@
+---
+- name: Hadoop {{ hadoop_install_mode }} installation
+  gather_facts: yes
+  hosts: hadoop,newdatanode
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+    hadoop_install_mode: 'cluster'
+    namenode_as_datanode: "no"
+    hadoop_replication_factor: 1
+    hadoop_block_size: 512m
+    hadoop_install_dir: /data
+    hadoop_user: hdfs
+    hadoop_group: hadoop
+    hadoop_store_dir: /data/hadoop_store
+    #E.g.,version hadoop-2.6.0
+    hadoop_version: 2.6.0
+ 
+    namenode_group: namenode
+    newdatanode_group: newdatanode
+    hadoop_parent: hadoop
+ 
+  roles:
+    - java-8
+    - hadoop-ubuntu-test

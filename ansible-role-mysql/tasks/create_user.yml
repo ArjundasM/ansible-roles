@@ -1,0 +1,10 @@
+---
+- mysql_user:
+    name: "{{ mysql_user }}"
+    login_user: "{{ mysql_root_username }}"
+    login_password: "{{ mysql_root_password }}"
+    password: "{{ mysql_password }}"
+    host: "{{ mysql_user_host }}"
+    priv: "{{ mysql_priv }}"
+    state: present
+

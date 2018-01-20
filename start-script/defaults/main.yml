@@ -1,0 +1,15 @@
+---
+#ACTIVEMQ VARIALBES
+
+#REDIS VARIABLE
+redis_port: 6379
+
+#HADOOP VARIABLES
+hadoop_user: hdfs
+hadoop_install_dir: /data
+hadoop_version: 2.7.3
+hadoop_home_dir: "{{ hadoop_install_dir }}/hadoop-{{ hadoop_version }}"
+
+#SPARK VARIABLES
+
+#MYSQL VARIABLES

@@ -1,0 +1,40 @@
+---
+#Creating activemq as service 
+#- name: Copying activemq service script 
+#  copy:
+#    src: "{{ amq_home_dir }}/bin/env"
+#    dest: /etc/default/activemq
+#    owner: root
+#    group: root
+#    mode: 0644
+
+- name: Copying env script to /etc/default
+  template:
+    src: env.j2
+    dest: /etc/default/activemq
+    owner: "{{ amq_user }}"
+    group: "{{ amq_group }}"
+    mode: 0644
+
+- name: Copying jetty script to /etc/default
+  template:
+    src: jetty.xml.j2
+    dest: "{{ amq_home_dir }}/conf/jetty.xml"
+    owner: "{{ amq_user }}"
+    group: "{{ amq_group }}"
+    mode: 0644
+
+#Create a link from activemq /etc/init.d
+- name: Creating link to Init.d
+  file:
+    src: "{{ amq_home_dir }}/bin/activemq"
+    dest: "/etc/init.d/activemq"
+    owner: root
+    group: root
+    mode: 0755
+    state: link
+
+#Enable activemq service in default run levels
+- name: Enabling activemq service in defualt run levels
+  command: update-rc.d activemq defaults
+  notify: Starting amq service

@@ -1,0 +1,12 @@
+---
+- name: Creating user group if not exists
+  group: name={{ redis_group }}  state=present
+
+- name: Creating user if not exists
+  user:
+    name: "{{ redis_user }}"
+    shell: /bin/bash
+    group: "{{ redis_group }}"
+    append: yes
+
+

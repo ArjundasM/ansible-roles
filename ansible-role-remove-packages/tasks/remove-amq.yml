@@ -1,0 +1,33 @@
+---
+- name: Checking activemq service exists or not
+  stat: path=/etc/init.d/activemq
+  register: service
+
+- name: Checking install directory present or not
+  stat: path={{ amq_home_dir }}
+  register: directory
+
+- name: Stopping the spark service in redis
+  shell: service activemq stop
+  when: service.stat.exists == True
+
+- name: Disabling the service script in amq
+  shell: update-rc.d -f activemq remove
+  when: service.stat.exists == True
+
+- name: Deleting the service script in amq
+  file:
+    path: /etc/init.d/activemq
+    state: absent
+  when: service.stat.exists == True
+
+- name: Deleting the amq home directory
+  file:
+    path: '{{ amq_home_dir }}'
+    state: absent
+  when: directory.stat.exists ==True
+
+- name: Deleting the amq home directory
+  file:
+    path: '{{ amq_home_dir }}-bin.tar.gz'
+    state: absent

@@ -1,0 +1,79 @@
+---
+- name: Checking whether mysql is installed or not
+  stat: path=/etc/init.d/mysql
+  register: installed
+
+- name: Finding mysql version
+  shell: "mysql --version |  awk '{print $5}' | sed 's/[,]//g' | head -c 3"
+  register: version
+  when: installed.stat.exists == True
+
+- name: Stopping mysql service 
+  service:
+    name: mysql 
+    state: stopped
+  when: installed.stat.exists == True
+
+#- name: Remove mysql package
+#  apt:
+#    name: "{{ mysql_package_name }}-{{ version.stdout }}"
+#    state: absent
+#    purge: yes
+#  when: installed.stat.exists == True
+
+- name: Remove mysql packages
+  shell: "apt-get --purge autoremove mysql-* -y"
+  become: yes
+  become_method: sudo
+  when: installed.stat.exists == True
+
+- name: Checking mysql configuration directory exists or not
+  stat: path=/etc/mysql
+  register: conf
+- name: Deleting the configuration directory of mysql
+  file:
+    path: /etc/mysql
+    state: absent
+  when: conf.stat.exists == True
+
+- name: Checking mysql data directory exists or not
+  stat: path={{ mysql_data_dir }}
+  register: data
+
+- name: Deleting the configuration directory of mysql
+#  file:
+#    path: "{{ mysql_data_dir }}"
+#    state: absent
+  shell: 'rm -r {{ mysql_data_dir }}*'
+  when: data.stat.exists == True
+
+- name: Checking mysql log directory exists or not
+  stat: path={{ mysql_log_dir }}
+  register: log
+
+- name: Deleting the configuration directory of mysql
+  file:
+    path: "{{ mysql_log_dir }}"
+    state: absent
+  when: log.stat.exists == True
+
+
+- name: Checking mysql commands exists or not
+  stat: path=/usr/bin/mysql
+  register: commands
+
+- name: Removing mysql commands from /usr/bin
+  shell: "rm /usr/bin/mysql*"
+  become: yes
+  become_method: sudo
+  when: commands.stat.exists == True
+
+- name: Remove dependencies that are no longer required
+  command: apt-get autoremove -y
+  become: yes
+  become_method: sudo
+
+- name: Removing all mysql related files
+  shell: "find / -name mysql -delete"
+  become: yes
+  become_method: sudo

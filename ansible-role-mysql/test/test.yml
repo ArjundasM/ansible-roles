@@ -1,0 +1,28 @@
+---
+- hosts: mysql
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+    #ENTER MYSQL VERSION TO INSTALL
+    mysql_package_name: mysql-server
+
+    #INFORMATION TO CREATE ROOT USER
+    mysql_root_username: root
+    mysql_root_password: root
+
+    #INFORMATIONS TO CREATE USER, ONLY FOLLOWING USER HAVING REMOTE ACCESS
+    mysql_user: bigbrain
+    mysql_password: bigbrain
+    mysql_user_host: '%'
+    mysql_priv: '*.*:ALL'
+
+    #IF YOUR DATABASE NEED TO COMMUNICATE WITH OTHER SERVERS
+    mysql_remote_access: 'yes'
+    mysql_port: 3306
+    mysql_data_dir: /var/lib/mysql
+    mysql_bind_address: '0.0.0.0'
+    mysql_log_dir: /var/log/mysql
+
+  roles:
+    - ansible-role-mysql

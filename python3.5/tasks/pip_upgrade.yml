@@ -1,0 +1,38 @@
+---
+#Upgrading pip executing again because in local pip3 upgrades to pip3.5 but in aws upgrades to pip3.4
+
+- name: Testing python3.5 path
+  stat: path=/usr/local/bin/python3.5
+  register: local
+
+- name: Testing python3.5 path
+  stat: path=/usr/bin/python3.5
+  register: aws
+
+
+- name: Testing pip3.4 version present or not
+  stat: path=/usr/local/bin/pip3.4
+  register: pip_3_4
+
+- name: Upgrading pip
+  shell: "pip3.4 install --upgrade pip"
+  become: True
+  become_method: sudo
+  when: pip_3_4.stat.exists == True
+
+#Reverting default python version
+- name: Setting python3.5 as default
+  alternatives:
+    name: python3
+    link: /usr/bin/python3
+    path: /usr/local/bin/python3.5
+    priority: 1
+  when: local.stat.exists == True
+
+- name: Setting python3.5 as default
+  alternatives:
+    name: python3
+    link: /usr/bin/python3
+    path: /usr/bin/python3.5
+    priority: 1
+  when: aws.stat.exists == True

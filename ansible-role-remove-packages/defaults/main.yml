@@ -1,0 +1,27 @@
+---
+package_to_remove: ""
+#JAVA VARIABLES
+apt_java_package: oracle-java8-installer
+
+#MYSQL VARIABLE
+mysql_package_name: mysql-server
+mysql_data_dir: /var/lib/mysql
+mysql_log_dir: /var/log/mysql
+
+#REDIS VARIABLES
+redis_home_dir: /opt/redis-stable
+redis_data_dir: /var/redis
+redis_config_dir: /etc/redis
+logfile: /var/log/redis_6379.log
+redis_port: 6379
+
+#ACTIVEMQ VARIABLES
+amq_home_dir: "/opt/apache-activemq-5.13.4"
+
+#HADOOP VARIABLES
+hadoop_home_dir: "/data/hadoop-2.6.0"
+
+#SPARK_VARIABLES
+SPARK_HOME:
+SPARK_LOCAL_DIRS:
+

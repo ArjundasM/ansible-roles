@@ -1,0 +1,6 @@
+#include required tasks
+- include: create_user.yml
+- include: download.yml
+- include: depends.yml
+- include: build.yml
+- include: service.yml

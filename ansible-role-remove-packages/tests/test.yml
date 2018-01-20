@@ -1,0 +1,42 @@
+---
+- name: Remove java package
+  hosts: hadoop
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+    #SPECIFY THE PACKAGE NAME TO REMOVE [ activemq, redis, java, python3.5, rztdl, spark, hadoop, mysql ]
+    - package_to_remove: hadoop
+
+    #JAVA VARIABLES
+    - apt_java_package: oracle-java8-installer
+
+    #MYSQL VARIABLE
+    - mysql_package_name: mysql-server
+    - mysql_data_dir: /var/lib/mysql
+    - mysql_log_dir: /var/log/mysql
+
+    #REDIS VARIABLES
+    - redis_home_dir: /opt/redis-stable
+    - redis_data_dir: /var/redis
+    - redis_confg_dir: /etc/redis
+    - logfile: /var/log/redis_6379.log
+    - redis_port: 6379
+    
+    #ACTIVEMQ VARIABLES
+    - amq_home_dir: /opt/apache-activemq-5.13.4
+
+    #HADOOP VARIABLES
+    - hadoop_home_dir: /data/hadoop-2.6.0
+    - hadoop_store_dir: /data/hadoop_store
+    - namenode_group: namenode
+    - newdatanode_group: newdatanode
+    - hadoop_parent: hadoop
+    - hadoop_user: hdfs
+
+    #SPARK_VARIABLES
+    - SPARK_HOME: /data/spark
+    - SPARK_LOCAL_DIRS: /data/spark/tmp
+
+  roles:
+    - remove_package

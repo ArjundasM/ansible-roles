@@ -1,0 +1,26 @@
+---
+- include: remove-amq.yml
+  when: package_to_remove == 'activemq'
+
+- include: remove-hadoop.yml
+  when: package_to_remove == 'hadoop'
+  become: yes
+  become_user: "{{ hadoop_user }}"
+
+- include: remove-java.yml  
+  when: package_to_remove == 'java'
+
+- include: remove-python3.5.yml  
+  when: package_to_remove == 'python3.5'
+
+- include: remove-redis.yml
+  when: package_to_remove == 'redis'
+
+- include: remove-rztdl.yml  
+  when: package_to_remove == 'rztdl'
+
+- include: remove-spark.yml
+  when: package_to_remove == 'spark'
+
+- include: remove-mysql.yml
+  when: package_to_remove == 'mysql'

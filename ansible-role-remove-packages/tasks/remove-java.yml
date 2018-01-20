@@ -1,0 +1,12 @@
+---
+- name: Removing java package
+  apt:
+    name: "{{ apt_java_package }}"
+    state: absent
+    purge: yes
+
+
+#- name: Removing java packages installed in system
+#  command: dpkg-query -W -f='${binary:Package}\n' | grep -E -e '^(ia32-)?(sun|oracle)-java' -e '^openjdk-' -e '^icedtea' -e '^(default|gcj)-j(re|dk)' -e '^gcj-(.*)-j(re|dk)' -e '^java-common' | xargs sudo apt-get -y remove
+
+

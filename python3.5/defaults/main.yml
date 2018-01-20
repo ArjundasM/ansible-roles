@@ -1,0 +1,6 @@
+---
+#PYTHON VARIABLES
+apt_cache_valid_time: 600
+apt_python_repo: ppa:deadsnakes/ppa
+apt_python_package: python3.5
+apt_pip_package: python3-pip

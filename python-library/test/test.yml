@@ -1,0 +1,16 @@
+---
+#PYTHON3.5 SHOULD BE PRESENT IN SERVER
+#TEST YAML FILE FOR INSTALLING PYTHON-libraries
+- name: Install python libraries
+  hosts: namenode
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  gather_facts: true
+  vars:
+    python_packages:
+      - boto
+      - smartopen
+      - pyhdfs
+  roles:
+    - python-library

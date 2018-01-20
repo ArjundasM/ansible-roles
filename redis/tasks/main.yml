@@ -1,5 +1,0 @@
-#include required tasks
-- include: download.yml
-- include: depends.yml
-- include: build.yml
-- include: service.yml
