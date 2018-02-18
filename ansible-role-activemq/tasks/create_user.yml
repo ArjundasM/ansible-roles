@@ -1,0 +1,11 @@
+---
+- name: Creating user group if not exists
+  group: name={{ amq_group }}  state=present
+
+- name: Creating user if not exists
+  user:
+    name: "{{ amq_user }}"
+    shell: /bin/bash
+    group: "{{ amq_group }}"
+    append: yes
+

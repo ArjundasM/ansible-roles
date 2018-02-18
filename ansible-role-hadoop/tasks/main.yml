@@ -1,0 +1,8 @@
+- include: pre-configure.yml
+- include: hosts.yml
+- include: cluster-setup.yml
+  when: hadoop_install_mode == 'cluster'
+- include: datanode-setup.yml
+  when: hadoop_install_mode == 'datanode'
+- include: single-node-setup.yml
+  when: hadoop_install_mode == 'single'

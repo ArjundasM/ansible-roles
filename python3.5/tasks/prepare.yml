@@ -1,0 +1,30 @@
+---
+#Sub-tasks
+- name: Creating user and group if not exists
+  group: name={{ big_group }} state=present
+- name: Creating user if not exists
+  user:
+    name: "{{ big_user }}"
+    shell: /bin/bash
+    group: "{{ big_group }}"
+    append: yes
+
+#Creating install directory if not present
+- name: Creating install directory
+  file:
+    path: "{{ big_install_dir }}"
+    state: directory
+    owner: "{{ big_user }}"
+    group: "{{ big_group }}"
+    recurse: yes
+    mode: 0755
+
+- name: Creating a backup directory
+  file:
+    path: "{{ big_backup_dir }}"
+    state: directory
+    owner: "{{ big_user }}"
+    group: "{{ big_group }}"
+    recurse: yes
+    mode: 0755
+

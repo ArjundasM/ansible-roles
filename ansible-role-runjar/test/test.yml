@@ -1,0 +1,19 @@
+---
+- name: To start jar in remote machine
+  hosts: localhost
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo 
+  vars: 
+  - artifact_path: /home/ubuntu/
+  - artifact_name: stage-orchestrator-1.0-SNAPSHOT.jar
+  - remote_location: /ebs/bigbrain_jars
+  - remote_source: "{{ remote_location }}/{{ artifact_name }}"
+  - remote_user: ubuntu
+  - remote_group: ubuntu
+  - running_port: 7777
+  - java_properties: "-Damq.ip=localhost:61616 -Dredis.ip=localhost -Ddatasource.url=localhost"
+
+  roles:
+    - ansible-role-java
+    - ansible-role-runjar

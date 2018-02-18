@@ -1,0 +1,24 @@
+---
+#Reverting default python version
+- name: Testing if python3.5 is already installed
+  command: python3.5 --version
+  register: python
+  ignore_errors: true
+
+#Following execution neeeded to set python3.4 as the default 
+- name: Setting python3.4 as default
+  alternatives:
+    name: python3
+    link: /usr/bin/python3
+    path: /usr/bin/python3.4
+    priority: 2
+  when: python.rc == 0 and ansible_distribution_version == "14.04"
+
+- include: ubuntu_16.yml
+  when: ansible_distribution_version == "16.04" 
+
+- include: ubuntu_14.yml
+  when: ansible_distribution_version == "14.04"
+
+- include: pip_upgrade.yml
+  when: ansible_distribution_version == "14.04"

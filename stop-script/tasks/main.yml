@@ -1,0 +1,12 @@
+---
+- include: stop-amq.yml
+  when: stop_service == 'activemq'
+- include: stop-mysql.yml
+  when: stop_service == 'mysql'
+- include: stop-redis.yml
+  when: stop_service == 'redis'
+- include: stop-spark.yml
+  when: stop_service == 'spark'
+- include: stop-hadoop.yml
+  when: stop_service == 'hadoop'
+

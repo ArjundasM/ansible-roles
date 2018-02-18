@@ -1,0 +1,11 @@
+---
+#- name: stopping amq service
+#  command: "{{ amq_home_dir }}/bin/activemq stop"
+#  when: amq_install_mode == "tarball"
+
+- name: Startng amq service
+  service:
+    name: activemq
+    state: started
+ # when: amq_install_mode == "apt"
+

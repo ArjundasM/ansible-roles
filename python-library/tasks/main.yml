@@ -1,0 +1,5 @@
+---
+#Instll rztdl library dependencies
+- name: Installing python packages
+  command: "pip3.5 install {{ item }}"
+  with_items: "{{ python_packages }}"

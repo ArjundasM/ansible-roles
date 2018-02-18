@@ -1,0 +1,5 @@
+---
+- name: Stopping mysql
+  service:
+    name: mysql
+    state: stopped

@@ -1,0 +1,10 @@
+---
+#TEST YAML FILE FOR INSTALLING PYTHON-3.5
+- name: Install python-3.5
+  hosts: namenode
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  gather_facts: true
+  roles:
+    - test-python

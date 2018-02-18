@@ -1,0 +1,21 @@
+---
+- name: Role to start services
+  hosts: mysql
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+    # POSSIBLE VALUES FOR STOP SERVICES: activemq | mysql | redis | spark | hadoop
+    - start_service: mysql
+    
+    #REDIS VARIABLE
+    - redis_port: 6379
+
+    #HADOOP VARIABLES
+    - hadoop_user: hdfs
+    - hadoop_install_dir: /data
+    - hadoop_version: 2.6.0
+
+  roles:
+    - start-script
+

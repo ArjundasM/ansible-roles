@@ -1,0 +1,11 @@
+---
+#- name: Stopping redis-server
+#  service:
+#    name: "redis_{{ redis_port }}"
+#    state: stopped
+
+- name: Stopping redis
+  command: "/etc/init.d/redis_{{ redis_port }} stop"
+  become: yes
+  become_method: sudo
+

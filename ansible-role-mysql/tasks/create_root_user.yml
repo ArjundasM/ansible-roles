@@ -1,0 +1,21 @@
+---
+- name: Set the root password.
+  mysql_user: 
+    name: root 
+    host: localhost
+    password: "{{ mysql_root_password }}"
+  become: true
+
+#NORMAL USER FOR APPLICATION
+#- name: Creating Mysql User (non-root)
+#  mysql_user:
+#    name: "{{ mysql_user_name }}"
+#    config_file: ~/.my.cnf
+#    login_host: localhost
+#    login_user: root
+#    login_password: root
+#    host: "{{ mysql_user_host}}"
+#    password: "{{ mysql_user_password }}"
+#    priv: "{{ mysql_priv }}"
+#    state: present
+#    append_privs: yes

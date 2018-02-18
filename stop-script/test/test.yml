@@ -1,0 +1,21 @@
+---
+- name: Role to stop services
+  hosts: redis
+  remote_user: bdo
+  become: yes
+  become_method: sudo
+  vars:
+    # POSSIBLE VALUES FOR STOP SERVICES: activemq | mysql | redis | spark | hadoop
+    - stop_service: redis
+    
+    #REDIS VARIABLE
+    - redis_port: 6379
+
+    #HADOOP VARIABLES
+    - hadoop_user: hdfs
+    - hadoop_install_dir: /data
+    - hadoop_version: 2.6.0
+
+  roles:
+    - stop-script
+

@@ -1,0 +1,7 @@
+---
+- name: Stopping running jar
+  command: "pkill -f {{ artifact_name }}"
+  become: yes
+  become_method: sudo
+  ignore_errors: yes
+

@@ -1,0 +1,6 @@
+- include: pre-configure.yml
+- include: stop.yml
+- include: copy.yml
+- include: start.yml
+- include: status.yml
+

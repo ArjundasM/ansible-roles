@@ -1,0 +1,13 @@
+---
+- name: Setting python3.4 as default
+  alternatives:
+    name: python3
+    link: /usr/bin/python3
+    path: /usr/bin/python3.4
+
+- name: Remove python3.5 package
+  apt:
+    name: python3.5
+    state: absent
+    purge: yes
+

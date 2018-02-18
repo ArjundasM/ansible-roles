@@ -1,0 +1,10 @@
+---
+artifact_path: ../files/
+artifact_name: Main.jar
+remote_location: /ebs/bigbrain_jars
+remote_source: "{{ remote_location }}/{{ artifact_name }}"
+remote_user: ubuntu
+remote_group: ubuntu
+running_port: 7777
+java_properties: "-Damq.ip=localhost:61616 -Dredis.ip=localhost -Ddatasource.url=localhost" 
+

@@ -1,8 +1,0 @@
----
-- name: Active-MQ installation
-  hosts: test
-  remote_user: ubuntu
-  become: yes
-  become_method: sudo 
-  roles:
-    - amq

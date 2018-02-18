@@ -1,0 +1,53 @@
+---
+- name: Check if MySQL is already installed.
+  stat: path=/etc/init.d/mysql
+  register: mysql_installed
+
+- name: Installing MySQL-server
+  apt:
+    name: "{{ mysql_package_name }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: "{{ apt_cache_valid_time }}"
+  when: mysql_installed.stat.exists == False
+
+- name: Installing Python-Mysqldb
+  apt: 
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - python-mysqldb
+    - python3-pip
+    - python-dev
+    - libmysqlclient-dev
+
+- name: Upgrade pip
+  command: "pip3 install --upgrade pip"
+
+- name: Install config parser
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - ConfigParser
+    - mysqlclient
+
+- name: Mysql configuration file
+  template:
+    src: my.cnf-16.04.j2
+    dest: "/etc/mysql/mysql.conf.d/mysqld.cnf"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart mysql
+  when: mysql_remote_access == 'yes' and ansible_distribution_version == "16.04"
+
+- name: Mysql configuration file
+  template:
+    src: my.cnf-14.04.j2
+    dest: "/etc/mysql/my.cnf"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart mysql
+  when: mysql_remote_access == 'yes' and ansible_distribution_version == "14.04"

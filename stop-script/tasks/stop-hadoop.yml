@@ -1,0 +1,6 @@
+---
+- name: Stop hadoop
+  command: "{{ hadoop_home_dir }}/sbin/stop-dfs.sh"
+  become: true
+  become_user: "{{ hadoop_user }}"
+

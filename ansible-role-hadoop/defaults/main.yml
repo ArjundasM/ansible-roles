@@ -1,0 +1,58 @@
+--- 
+#Specify the install mode single | cluster | datanode
+# single --> For single node HDFS setup
+# cluster --> For HDFS cluster setup
+# datanode --> For add new datanode to existing HDFS cluster
+
+hadoop_install_mode: 'cluster'
+namenode_as_datanode: "yes"
+
+#Enter the hadoop-hdfs replication factor
+hadoop_replication_factor: 3
+
+#Enter the required block size
+#You can use the following suffix (case insensitive): 
+# - k(kilo) 
+# - m(mega) 
+# - g(giga)
+# - t(tera)
+# - p(peta) 
+# - e(exa) -  to specify the size (such as 128k, 512m, 1g, etc.), 
+#- Or provide complete size in bytes (such as 134217728 for 128 MB).
+
+hadoop_block_size: 512m
+#Specify the directory to download and install hadoop
+hadoop_install_dir: /data
+
+#Enter the user and group name to configure hadoop
+hadoop_user: hdfs
+hadoop_group: hadoop
+
+#Specify the data directory
+hadoop_store_dir: /data/hadoop_store
+
+#THIS IS DEFULT VARIABLES DONT CHANGE UNNECESSARILY
+
+#Metion IP address or hostname of namenode
+#hadoop_namenode: "{{ hostvars[groups[namenode_group][0]]['ansible_fqdn'] }}"
+#Using hostname instead of fqdn value
+hadoop_namenode: "{{ hostvars[groups[namenode_group][0]]['ansible_nodename'] }}"
+
+#Mention keyfile name to create ssh key
+hadoop_keyfile: id_rsa
+
+#Enter the location in ansible server to store key
+hadoop_keylocation: /tmp
+
+#Haddop URL to download
+hadoop_version: 2.7.3
+hadoop_url_prefix: "https://archive.apache.org/dist/hadoop/core"
+hadoop_url: "{{ hadoop_url_prefix }}/hadoop-{{ hadoop_version }}/hadoop-{{ hadoop_version }}.tar.gz"
+hadoop_home_dir: "{{ hadoop_install_dir }}/hadoop-{{ hadoop_version }}"
+
+#ENTER NAMENODE GROUP NAME MENTIONED IN HOST FILE
+namenode_group: namenode
+#ENTER NEWDATANODE GROUPNAME MENTIONED IN HOST FILE
+newdatanode_group: newdatanode
+#ENTER HADOOP PARENT GROUP NAMEN MENTIONED IN HOSTS FILE
+hadoop_parent: hadoop

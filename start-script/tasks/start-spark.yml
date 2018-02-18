@@ -1,0 +1,9 @@
+---
+- name: Starting master
+  shell: service spark-master start
+  when: inventory_hostname in groups['master']
+
+- name: Starting slaves
+  shell: service spark-slave start
+  when: inventory_hostname in groups['slaves']
+

@@ -1,0 +1,13 @@
+#SAMPLE HOSTS FILE
+
+[namenode]
+
+[datanode]
+
+[newdatanode]
+
+[hadoop:childrens]
+namenode
+datanode
+newdatanode
+

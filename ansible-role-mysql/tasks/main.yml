@@ -1,0 +1,12 @@
+---
+- name: Check if MySQL is already installed.
+  stat: path=/etc/init.d/mysql
+  register: status
+
+- include: install.yml
+  when: status.stat.exists == False
+- include: create_root_user.yml
+  when: status.stat.exists == False
+- include: create_user.yml
+  when: status.stat.exists == False
+

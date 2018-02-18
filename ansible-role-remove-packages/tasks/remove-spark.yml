@@ -1,0 +1,42 @@
+---
+- name: Stopping the spark service in master
+  shell: service spark-master stop
+  when: inventory_hostname in groups['master']
+
+- name: Stopping the spark service in slaves
+  shell: service spark-slave stop
+  when: inventory_hostname in groups['slaves']
+
+- name: Disabling the service script in master
+  shell: update-rc.d -f spark-master remove
+  when: inventory_hostname in groups['master']
+
+- name: Disabling the service script in slaves
+  shell: update-rc.d -f spark-slave remove
+  when: inventory_hostname in groups['slaves']
+
+- name: Deleting the service script in master
+  file: 
+    path: /etc/init.d/spark-master 
+    state: absent
+
+- name: Deleting the service script in slaves
+  file:
+    path: /etc/init.d/spark-slave
+    state: absent
+
+- name: Deleting the spark binaries
+  file: 
+    path: '{{ SPARK_HOME }}'
+    state: absent
+
+- name: Checking if spark temp directory is present or not
+  stat: 
+    path: '{{ SPARK_LOCAL_DIRS }}'
+  register: SPARK_LOC_STATUS
+
+- name: Deleting the spark local directories
+  file:
+    path: '{{ SPARK_LOCAL_DIRS }}'
+    state: absent
+  when: SPARK_LOC_STATUS.stat.exists == True    
