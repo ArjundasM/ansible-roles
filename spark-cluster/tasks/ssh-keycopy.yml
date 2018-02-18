@@ -1,0 +1,12 @@
+---
+- name: Copying ssh-publickey file to all workers
+  copy:
+    src: "{{ spark_keylocation }}/{{ spark_keyfile }}.pub"
+    dest: "/home/{{ spark_user }}/.ssh"
+    owner: "{{ spark_user }}"
+    group: "{{ spark_group }}"
+    mode: 0600
+  when: inventory_hostname in groups[slaves_group]
+
+- name: Adding keyfile to servers authorized_keys file
+  shell: "cat /home/{{ spark_user }}/.ssh/{{ spark_keyfile }}.pub >> /home/{{ spark_user }}/.ssh/authorized_keys"

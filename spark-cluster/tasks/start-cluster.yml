@@ -1,0 +1,11 @@
+- include: pre-configure.yml
+- include: download.yml
+- include: environment.yml
+- include: configure.yml
+- include: ssh-keygen.yml
+- include: ssh-keycopy.yml
+- include: start-master.yml
+  when: inventory_hostname in groups[master_group]
+- include: start-workers.yml
+  when: inventory_hostname in groups[slaves_group]
+  

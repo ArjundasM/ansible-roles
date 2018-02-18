@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+SPARK_MASTER_HOST={{ spark_master_local_ip }}
+SPARK_LOCAL_IP={{ ansible_all_ipv4_addresses | list | join(' ') }}
+{% for key,value in spark_variables.items() %}
+{% if value != None %}
+{{ key }}={{ value }}
+{% endif %}
+{% endfor %}

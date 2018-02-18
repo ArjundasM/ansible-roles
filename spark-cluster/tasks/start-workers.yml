@@ -1,0 +1,6 @@
+---
+#This file for starting workers in each machines
+- name: Starting spark-workers
+  command: "{{ spark_home }}/sbin/start-slave.sh {{ spark_master_local_ip }}:{{ spark_master_connection_port }}"
+  become: yes
+  become_user: "{{ spark_user }}"

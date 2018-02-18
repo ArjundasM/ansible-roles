@@ -1,0 +1,19 @@
+---
+- name: Creating user group if not exists
+  group: name={{ spark_group }}  state=present
+
+- name: Creating user if not exists
+  user:
+    name: "{{ spark_user }}"
+    shell: /bin/bash
+    group: "{{ spark_group }}"
+    append: yes
+
+- name: Creating install directory if not present
+  file:
+    path: "{{ spark_install_dir }}"
+    state: directory
+    owner: "{{ spark_user }}"
+    group: "{{ spark_group }}"
+    recurse: yes
+    mode: 0755

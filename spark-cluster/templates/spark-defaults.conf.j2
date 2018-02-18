@@ -1,0 +1,3 @@
+spark.driver.extraClassPath {{ spark_install_dir }}/libs/*
+spark.executor.extraClassPath {{ spark_install_dir }}/libs/*
+spark.master spark://{{ spark_master_local_ip }}:{{ spark_master_connection_port }}

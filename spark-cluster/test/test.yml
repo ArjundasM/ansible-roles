@@ -1,0 +1,10 @@
+---
+- name: Spark installation
+  hosts: master,slaves
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  vars:
+  roles:
+#    - java-offline
+    - new-spark

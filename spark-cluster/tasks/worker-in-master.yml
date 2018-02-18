@@ -1,0 +1,11 @@
+---
+#This yml file is using if master already installed and adding master ip in slave_group for next deployment.
+- name: Updating slave file in spark-master
+  template:
+    src: slaves.j2
+    dest: "{{ spark_home }}/conf/slaves"
+    owner: "{{ spark_user }}"
+    group: "{{ spark_group }}"
+    mode: 0644
+- include: start-workers.yml
+

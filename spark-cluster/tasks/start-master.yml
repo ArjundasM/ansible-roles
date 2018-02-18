@@ -1,0 +1,5 @@
+---
+- name: Starting spark-master
+  command: "{{ spark_home }}/sbin/start-master.sh -h  {{ spark_master_local_ip }}"
+  become: yes
+  become_user: "{{ spark_user }}"

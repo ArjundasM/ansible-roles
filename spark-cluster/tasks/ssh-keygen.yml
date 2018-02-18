@@ -1,0 +1,64 @@
+---
+- name: Creating .ssh directory if not present
+  file:
+    path: /home/{{ spark_user }}/.ssh
+    state: directory
+    owner: "{{ spark_user }}"
+    group: "{{ spark_group }}"
+    mode: 0700
+
+- name: Creating authorized_keys file if not present
+  file: 
+    dest: /home/{{ spark_user }}/.ssh/authorized_keys
+    state: touch
+    owner: "{{ spark_user }}"
+    group: "{{ spark_group }}"
+    mode: 0600
+
+- name: Checking private key present with same name or not
+  stat: path=/home/{{ spark_user }}/.ssh/{{ spark_keyfile }}
+  register: rsa
+
+- name: Checking public key presnet with same name or not
+  stat: path=/home/{{ spark_group }}/.ssh/{{ spark_keyfile }}.pub
+  register: pub
+
+- name: Deleting old private key
+  file:
+    dest: "/home/{{ spark_user }}/.ssh/{{ spark_keyfile }}"
+    state: absent
+  when: rsa.stat.exists and ansible_nodename == spark_master
+
+- name: Deleting old public key
+  file:
+    dest: "/home/{{ spark_user }}/.ssh/{{ spark_keyfile}}.pub"
+    state: absent
+  when: rsa.stat.exists
+ 
+- name: Creating SSH key in master server
+  command: ssh-keygen -b 2048 -t rsa -f /home/{{ spark_user }}/.ssh/{{ spark_keyfile }} -q -N '' -P ""
+  become: yes
+  become_user: "{{ spark_user }}"
+  when: ansible_nodename == spark_master 
+
+- name: Creating ssh config file
+  file:
+    dest: "/home/{{ spark_user }}/.ssh/config"
+    state: touch
+    owner: "{{ spark_user }}"
+    group: "{{ spark_group }}"
+    mode: 0664
+
+- name: Adding ssh-key identity
+  blockinfile:
+    dest: /home/{{ spark_user }}/.ssh/config
+    block: |
+      Host *
+      IdentityFile ~/.ssh/{{ spark_keyfile }}
+   
+- name: Downloading ssh-public key to ansible server
+  fetch: 
+    src: /home/{{ spark_user }}/.ssh/{{ spark_keyfile }}.pub
+    dest: "{{ spark_keylocation }}/{{ spark_keyfile}}.pub"
+    flat: yes
+  when: ansible_nodename == spark_master

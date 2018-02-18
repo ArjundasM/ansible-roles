@@ -1,0 +1,10 @@
+---
+- name: Adding spark environment vairables
+  blockinfile:
+    dest: /home/{{ spark_user }}/.bashrc 
+    block: |
+      #SPARK VARIABLES START
+      export SPARK_HOME={{ spark_install_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}
+      export PYSPARK_PYTHON=python3
+      export PYTHONPATH=$SPARK_HOME/python/lib/py4j-0.10.4-src.zip:$SPARK_HOME/python/lib/pyspark.zip
+      #SPARK VARIABLES END

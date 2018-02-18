@@ -1,0 +1,29 @@
+---
+- name: Download Spark
+  get_url:
+    url: "{{ spark_url }}"
+    dest: "{{ spark_install_dir }}"
+  register: result
+  until: result|success
+  retries: 5
+  delay: 2
+
+- name: Extracting package
+  unarchive:
+    src: "{{ spark_install_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}.tgz"
+    dest: "{{ spark_install_dir }}"
+    remote_src: yes
+
+- name: Changing file permissions
+  file:
+    path: "{{ spark_install_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}"
+    owner: "{{ spark_user }}"
+    group: "{{ spark_group }}"
+    recurse: yes
+
+- name: Deleting tarball file
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ spark_install_dir }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_version }}.tgz"

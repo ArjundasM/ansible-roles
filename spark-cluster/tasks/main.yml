@@ -1,0 +1,35 @@
+- name: Checking spark-master already deplyed or not
+  shell: ps -ef | grep org.*.Master | grep -v grep | wc -l
+  become: yes
+  become_method: sudo
+  register: master
+
+- name: Checking spark-worker already deplyed or not
+  shell: ps -ef | grep org.*.Worker | grep -v grep | wc -l
+  become: yes
+  become_method: sudo
+  register: worker
+
+- name: Checking spark cluster already deplyed or not
+  shell: ps -ef | grep 'org.*.Worker\|org.*.Master' | grep -v grep | wc -l
+  become: yes
+  become_method: sudo
+  register: server
+
+- debug:
+    msg: "Spark master and {{ worker.stdout }} worker(s) running in this server...Stop it first!!!"
+  when: server.stdout | int >= 2
+
+- debug: 
+    msg: "Spark master already running in this server...Stop it fisrt!!!"
+  when: server.stdout | int == 1 and master.stdout | int == 1 and inventory_hostname in groups[master_group]
+
+- debug: 
+    msg: "{{ worker.stdout }} spark worker(s) already running in this server...Stop it first!!!"
+  when: server.stdout | int == 1 and worker.stdout | int  >= 1 and inventory_hostname in groups[slaves_group]
+
+- include: start-cluster.yml
+  when: server.stdout | int == 0
+
+- include: worker-in-master.yml
+  when: server.stdout | int == 1 and master.stdout | int == 1 and worker.stdout | int == 0 and inventory_hostname in groups[slaves_group]

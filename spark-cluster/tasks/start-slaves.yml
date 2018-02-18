@@ -1,0 +1,7 @@
+- include: pre-configure.yml
+- include: download.yml
+- include: environment.yml
+- include: configure.yml
+- include: ssh-keycopy.yml
+- include: start-workers.yml
+  when: inventory_hostname in groups[slaves_group]

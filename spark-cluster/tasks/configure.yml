@@ -1,0 +1,32 @@
+---
+#- name: Copy libraries for spark
+#  copy:
+#    src: libs
+#    dest: "{{ spark_install_dir }}"
+#    owner: "{{ spark_user }}"
+#    group: "{{ spark_group }}"
+#    mode: 0644
+
+- name: Copy slave file to configuration
+  template:
+    src: slaves.j2
+    dest: "{{ spark_home }}/conf/slaves"
+    owner: "{{ spark_user }}"
+    group: "{{ spark_group }}"
+    mode: 0644
+
+- name: Copy spark-env.sh file to configuration
+  template:
+    src: spark-env.sh.j2
+    dest: "{{ spark_home }}/conf/spark-env.sh"
+    owner: "{{ spark_user }}"
+    group: "{{ spark_group }}"
+    mode: 0644
+
+- name: Copy spark-defaults.sh file to configuration
+  template:
+    src: spark-defaults.conf.j2
+    dest: "{{ spark_home }}/conf/spark-defaults.conf"
+    owner: "{{ spark_user }}"
+    group: "{{ spark_group }}"
+    mode: 0644
