@@ -5,10 +5,15 @@
     state: directory
     mode: 0755
     recurse: yes
+
+- name: Change directory ownership
+  file:
+    path: "{{ nfs_share_folder }}"
+    state: directory
     owner: nobody
     group: nogroup
 
-- name: Create NFS sharing directory
+- name: Create required directories
   file:
     path: "{{ item }}"
     state: directory

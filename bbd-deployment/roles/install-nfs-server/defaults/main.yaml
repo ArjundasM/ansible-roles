@@ -1,7 +1,7 @@
-nfs_share_folder: /home/arjundasm/das
+nfs_share_folder: /root/rztai
 required_directories:
   - "{{ nfs_share_folder }}/data/mysql"
   - "{{ nfs_share_folder }}/data/postgres"
   - "{{ nfs_share_folder }}/logs"
   - "{{ nfs_share_folder }}/jupyter"
-required_directories_user: arjundasm
+required_directories_user: "{{ ansible_user_id }}"
