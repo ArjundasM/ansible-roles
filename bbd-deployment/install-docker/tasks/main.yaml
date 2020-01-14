@@ -1,0 +1,64 @@
+---
+- name: Run the equivalent of "apt-get update"
+  apt:
+    update_cache: true
+
+- name: Disable pinned Docker version
+  file:
+    dest: "/etc/apt/preferences.d/docker.pref"
+    state: "absent"
+  when: not docker_version | d()
+
+- name: Enable pinned Docker version
+  template:
+    src: "docker.pref.j2"
+    dest: "/etc/apt/preferences.d/docker.pref"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  when: docker_version | d()
+
+- name: Install Docker's dependencies
+  apt:
+    name: "{{ docker_package_dependencies + docker_pip_dependencies }}"
+
+- name: Add Docker's public GPG key to the APT keyring
+  apt_key:
+    id: "{{ docker_apt_key_id }}"
+    url: "{{ docker_apt_key_url }}"
+
+- name: Configure Docker's upstream APT repository
+  apt_repository:
+    repo: "{{ docker_apt_repository }}"
+    update_cache: true
+
+- name: Install Docker
+  apt:
+    name: "docker-{{ docker_edition }}"
+    state: "{{ docker_state }}"
+
+- name: Add test user
+  user:
+    name: "{{ item }}"
+    shell: "/bin/bash"
+  loop: "{{ docker_users }}"
+
+- name: Add user(s) to "docker" group
+  user:
+    name: "{{ item }}"
+    groups: "docker"
+    append: true
+  loop: "{{ docker_users }}"
+
+- name: Check if Swarm has already been Initialized
+  shell: docker node ls
+  register: swarm_status
+  ignore_errors: true
+  tags: swarm
+
+- name: Init a new swarm with default parameters
+  docker_swarm:
+    state: present
+    advertise_addr: "{{ docker_swarm_advertise_addrs }}"
+  when: swarm_status.rc != 0
+  run_once: true

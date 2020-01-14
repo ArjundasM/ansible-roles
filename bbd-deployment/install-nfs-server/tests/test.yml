@@ -1,0 +1,12 @@
+---
+
+- hosts: "localhost"
+  become: true
+  become_method: sudo
+  become_user: root
+
+  vars:
+    docker_version: "5:19.03.5"
+    docker_users: ["devops"]
+  roles:
+    - role: "install-nfs-server"

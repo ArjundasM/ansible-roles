@@ -1,0 +1,36 @@
+
+- name: Create NFS sharing directory
+  file:
+    path: "{{ nfs_share_folder }}"
+    state: directory
+    mode: 0755
+    recurse: yes
+    owner: nobody
+    group: nogroup
+
+- name: Create NFS sharing directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ required_directories_user }}"
+    group: "{{ required_directories_user }}"
+    recurse: yes
+  loop: "{{ required_directories }}"
+
+- name: Install NFS packages
+  apt:
+    name: ['nfs-common','nfs-kernel-server']
+    state: latest
+    update_cache: yes
+
+- name: Copy /etc/exports file
+  template:
+    src: exports.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+
+- name: Restart NFS server
+  service:
+    name: nfs-server
+    state: restarted

@@ -1,0 +1,11 @@
+---
+
+- hosts: "localhost"
+  become: true
+  become_method: sudo
+
+  vars:
+    docker_version: "5:19.03.5"
+    docker_users: ["devops"]
+  roles:
+    - role: "install-docker"
